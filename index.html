@@ -640,6 +640,127 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Senarai Rekod Arkib -->
+            <div id="archiveRecordsContainer" class="space-y-4">
+                <!-- Dijana oleh JavaScript -->
+            </div>
+        </section>
+
+        <!-- ==================== TAB 4: HEBAHAN PANTAS & SANDARAN JSON ==================== -->
+        <section id="view-json" class="no-print hidden fade-in">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+                <!-- Kad 1: Penjana Hebahan WhatsApp / Telegram -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
+                    <div class="bg-emerald-800 text-white px-5 py-4 flex items-center justify-between">
+                        <div class="flex items-center gap-2.5">
+                            <i class="fa-brands fa-whatsapp text-xl text-emerald-300"></i>
+                            <div>
+                                <h3 class="font-bold text-sm sm:text-base">Penjana Hebahan Pantas Grup Guru</h3>
+                                <p class="text-[11px] text-emerald-200">Format sedia salin untuk WhatsApp & Telegram SRATI</p>
+                            </div>
+                        </div>
+                        <button type="button" onclick="copyWhatsAppSummary()" class="bg-gold-500 hover:bg-gold-400 text-srati-950 font-extrabold text-xs px-3.5 py-2 rounded-xl shadow transition flex items-center gap-1.5">
+                            <i class="fa-regular fa-copy"></i>
+                            <span>Salin Teks</span>
+                        </button>
+                    </div>
+                    <div class="p-5 flex-1 flex flex-col">
+                        <pre id="whatsappPreviewBox" class="flex-1 bg-slate-50 border border-slate-200 rounded-xl p-4 text-xs font-sans whitespace-pre-wrap text-slate-800 leading-relaxed max-h-[420px] overflow-y-auto"></pre>
+                    </div>
+                </div>
+
+                <!-- Kad 2: Sistem Sandaran & Pemulihan Data (.JSON) -->
+                <div class="space-y-6">
+                    <!-- Muat Turun JSON -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-lg border border-amber-200">
+                                <i class="fa-solid fa-file-export"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-sm sm:text-base text-slate-900">Eksport / Muat Turun Fail Sandaran (.JSON)</h3>
+                                <p class="text-xs text-slate-500">Simpan fail rekod untuk dipindahkan ke komputer atau telefon lain</p>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
+                            <button type="button" onclick="downloadCurrentJSON()" class="p-3.5 rounded-xl border border-amber-300 bg-amber-50 hover:bg-amber-100 text-amber-950 text-left transition">
+                                <div class="font-bold text-xs flex items-center gap-2">
+                                    <i class="fa-solid fa-file-code text-amber-600"></i>
+                                    <span>Muat Turun Minit Semasa</span>
+                                </div>
+                                <p class="text-[11px] text-amber-800 mt-1">Eksport borang yang sedang dibuka sahaja.</p>
+                            </button>
+                            <button type="button" onclick="downloadAllRecordsJSON()" class="p-3.5 rounded-xl border border-srati-300 bg-srati-50 hover:bg-srati-100 text-srati-950 text-left transition">
+                                <div class="font-bold text-xs flex items-center gap-2">
+                                    <i class="fa-solid fa-database text-srati-700"></i>
+                                    <span>Muat Turun Semua Arkib</span>
+                                </div>
+                                <p class="text-[11px] text-srati-800 mt-1">Eksport keseluruhan rekod tersimpan sebagai sandaran penuh.</p>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Muat Naik JSON -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-lg border border-blue-200">
+                                <i class="fa-solid fa-file-import"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-sm sm:text-base text-slate-900">Import / Muat Naik Fail Sandaran (.JSON)</h3>
+                                <p class="text-xs text-slate-500">Pulihkan rekod tunggal ke borang atau gabungkan arkib penuh</p>
+                            </div>
+                        </div>
+                        <label class="mt-3 flex flex-col items-center justify-center border-2 border-dashed border-slate-300 hover:border-srati-500 bg-slate-50 hover:bg-srati-50/40 rounded-2xl p-6 cursor-pointer transition text-center">
+                            <i class="fa-solid fa-cloud-arrow-up text-2xl text-srati-600 mb-2"></i>
+                            <span class="text-xs font-bold text-slate-800">Klik untuk memilih fail <code>.json</code> daripada peranti anda</span>
+                            <span class="text-[11px] text-slate-500 mt-1">Menyokong fail Rekod Tunggal dan fail Arkib Penuh SRATI</span>
+                            <input type="file" accept=".json,application/json" onchange="handleJSONUpload(event)" class="hidden">
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ==================== FOOTER RASMI ==================== -->
+    <footer class="no-print bg-white border-t border-slate-200 py-4 mt-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-500">
+            <div>
+                &copy; <span id="footerYear">2026</span> <strong>Sekolah Rendah Agama Tarbiyyah Islamiyah (SABK)</strong>. Hak Cipta Terpelihara.
+            </div>
+            <div class="text-[11px] text-slate-400">
+                Sistem e-Minit Curai Rasmi • Piawaian Kementerian Pendidikan Malaysia (KPM)
+            </div>
+        </div>
+    </footer>
+
+    <!-- ==================== MODAL PENGESAHAN TINDAKAN ==================== -->
+    <div id="customModalBackdrop" class="no-print fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 fade-in">
+            <div class="flex items-start gap-3">
+                <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-lg shrink-0">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+                <div>
+                    <h3 id="modalTitle" class="text-base font-bold text-slate-900">Pengesahan</h3>
+                    <p id="modalMessage" class="text-xs text-slate-600 mt-1 leading-relaxed">Adakah anda pasti?</p>
+                </div>
+            </div>
+            <div class="mt-5 flex items-center justify-end gap-2">
+                <button type="button" onclick="closeCustomModal()" class="px-4 py-2 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-50 text-xs font-semibold transition">
+                    Batal
+                </button>
+                <button type="button" id="modalConfirmBtn" class="px-4 py-2 rounded-xl bg-srati-700 hover:bg-srati-800 text-white text-xs font-bold shadow transition">
+                    Teruskan
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- ==================== MODAL TETAPAN STORAN & GOOGLE DRIVE ==================== -->
     <div id="storageModalBackdrop" class="no-print fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 fade-in max-h-[90vh] overflow-y-auto">
@@ -871,6 +992,14 @@ function doPost(e) {
             "Semua ketetapan dan keputusan mesyuarat ini hendaklah dimaklumkan kepada Guru Besar untuk tindakan susulan sekolah."
         ];
 
+        // Penjana ID Unik Selamat
+        function generateUUID() {
+            if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+                return crypto.randomUUID();
+            }
+            return 'id_' + Date.now() + '_' + Math.random().toString(36).substring(2, 9);
+        }
+
         // ==================== FUNGSI BANTUAN TARIKH & HARI ====================
         function getMalayDayName(isoDateString) {
             if (!isoDateString) return '';
@@ -921,10 +1050,10 @@ function doPost(e) {
                 pengerusi: '',
                 turutHadir: 'Tiada',
                 agendaItems: [
-                    { id: crypto.randomUUID(), tajukPerkara: 'Ucapan Aluan & Tujuan Program', huraian: '' }
+                    { id: generateUUID(), tajukPerkara: 'Ucapan Aluan & Tujuan Program', huraian: '' }
                 ],
                 actionItems: [
-                    { id: crypto.randomUUID(), perkara: '', pelaksana: 'Ketua Panitia / Penyelaras Unit', tarikhSasaran: '', status: 'Belum Mula' }
+                    { id: generateUUID(), perkara: '', pelaksana: 'Ketua Panitia / Penyelaras Unit', tarikhSasaran: '', status: 'Belum Mula' }
                 ],
                 bahanEdaran: '',
                 tarikhSedia: today,
@@ -969,10 +1098,10 @@ function doPost(e) {
                         ...parsed,
                         agendaItems: Array.isArray(parsed.agendaItems) && parsed.agendaItems.length > 0
                             ? parsed.agendaItems
-                            : [{ id: crypto.randomUUID(), tajukPerkara: 'Ucapan Aluan & Tujuan Program', huraian: '' }],
+                            : [{ id: generateUUID(), tajukPerkara: 'Ucapan Aluan & Tujuan Program', huraian: '' }],
                         actionItems: Array.isArray(parsed.actionItems) && parsed.actionItems.length > 0
                             ? parsed.actionItems
-                            : [{ id: crypto.randomUUID(), perkara: '', pelaksana: '', tarikhSasaran: '', status: 'Belum Mula' }]
+                            : [{ id: generateUUID(), perkara: '', pelaksana: '', tarikhSasaran: '', status: 'Belum Mula' }]
                     };
                 }
                 return null;
@@ -1048,7 +1177,7 @@ function doPost(e) {
 
             try {
                 updateStorageBadge('Menyegerak dengan Google Drive...');
-                const response = await fetch(activeGoogleScriptUrl, { method: 'GET' });
+                const response = await fetch(activeGoogleScriptUrl, { method: 'GET', redirect: 'follow' });
                 const result = await response.json();
 
                 if (result && result.status === 'success' && Array.isArray(result.records)) {
@@ -1101,8 +1230,10 @@ function doPost(e) {
         async function pushRecordToGoogleDrive(record) {
             if (!activeGoogleScriptUrl) return false;
             try {
+                // Tidak menetapkan header Content-Type: application/json supaya pelayar tidak menghantar CORS OPTIONS preflight ke Google Apps Script
                 const response = await fetch(activeGoogleScriptUrl, {
                     method: 'POST',
+                    redirect: 'follow',
                     body: JSON.stringify({ action: 'upsert', record: record })
                 });
                 const resJson = await response.json();
@@ -1118,6 +1249,7 @@ function doPost(e) {
             try {
                 await fetch(activeGoogleScriptUrl, {
                     method: 'POST',
+                    redirect: 'follow',
                     body: JSON.stringify({ action: 'delete', id: id })
                 });
             } catch (e) {
@@ -1294,7 +1426,7 @@ function doPost(e) {
 
         window.addAgendaItem = function(prefillHuraian = '') {
             currentMinit.agendaItems.push({
-                id: crypto.randomUUID(),
+                id: generateUUID(),
                 tajukPerkara: '',
                 huraian: prefillHuraian
             });
@@ -1381,7 +1513,7 @@ function doPost(e) {
 
         window.addActionItem = function() {
             currentMinit.actionItems.push({
-                id: crypto.randomUUID(),
+                id: generateUUID(),
                 perkara: '',
                 pelaksana: '',
                 tarikhSasaran: '',
@@ -1691,6 +1823,7 @@ function doPost(e) {
         // ==================== PENJANA RINGKASAN WHATSAPP / TELEGRAM ====================
         function updateWhatsAppPreview() {
             const box = document.getElementById('whatsappPreviewBox');
+            if (!box) return;
             const m = currentMinit;
 
             const tarikhText = m.tarikh ? `${formatDateMY(m.tarikh)}${m.hari ? ' (' + m.hari + ')' : ''}` : '-';
@@ -1849,6 +1982,7 @@ _Dijana melalui Sistem e-Minit Curai SRATI (Piawaian KPM)_`;
                 try {
                     await fetch(activeGoogleScriptUrl, {
                         method: 'POST',
+                        redirect: 'follow',
                         body: JSON.stringify({ action: 'bulk_merge', records: cleanBatch })
                     });
                 } catch (e) { /* abaikan ralat individu */ }
@@ -1888,6 +2022,7 @@ _Dijana melalui Sistem e-Minit Curai SRATI (Piawaian KPM)_`;
 
         window.renderArchiveList = function() {
             const container = document.getElementById('archiveRecordsContainer');
+            if (!container) return;
             const searchQuery = (document.getElementById('archiveSearchInput').value || '').toLowerCase();
             const catFilter = document.getElementById('archiveCategoryFilter').value;
             const statusFilter = document.getElementById('archiveStatusFilter').value;
@@ -2110,26 +2245,26 @@ _Dijana melalui Sistem e-Minit Curai SRATI (Piawaian KPM)_`;
                 turutHadir: 'Ustazah Nurul Huda binti Ismail (Setiausaha Peperiksaan & PBD SRATI)',
                 agendaItems: [
                     {
-                        id: crypto.randomUUID(),
+                        id: generateUUID(),
                         tajukPerkara: 'Penjaminan Kualiti Pentaksiran Bilik Darjah (PBD)',
                         huraian: 'Semua guru mata pelajaran perlu memastikan Tahap Penguasaan (TP) murid dinilai secara holistik berasaskan pemerhatian, lisan dan penulisan sepanjang sesi pembelajaran serta direkodkan secara berterusan.'
                     },
                     {
-                        id: crypto.randomUUID(),
+                        id: generateUUID(),
                         tajukPerkara: 'Tarikh Akhir Pengisian Skor & Pelaporan dalam Sistem KPM',
                         huraian: 'Pengisian data PBD dan Ujian Akhir Sesi Akademik (UASA) hendaklah dilengkapkan dalam sistem sebelum 28 haribulan ini bagi membolehkan pengesahan Guru Besar dibuat.'
                     }
                 ],
                 actionItems: [
                     {
-                        id: crypto.randomUUID(),
+                        id: generateUUID(),
                         perkara: 'Mengadakan taklimat dalaman (In-House Training) penyelarasan PBD kepada semua guru SRATI.',
                         pelaksana: 'Setiausaha PBD & Ketua Panitia',
                         tarikhSasaran: today,
                         status: 'Dalam Proses'
                     },
                     {
-                        id: crypto.randomUUID(),
+                        id: generateUUID(),
                         perkara: 'Menyediakan pelan intervensi berfokus bagi murid yang berada pada tahap TP1 dan TP2.',
                         pelaksana: 'Semua Guru Mata Pelajaran',
                         tarikhSasaran: today,
@@ -2140,6 +2275,15 @@ _Dijana melalui Sistem e-Minit Curai SRATI (Piawaian KPM)_`;
                 tarikhSedia: today,
                 pengesah: 'Guru Besar, SRA Tarbiyyah Islamiyah (SABK)',
                 ulasanPentadbir: '',
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+            };
+
+            saveDraftToLocalStorage();
+            populateFormFromState();
+            showToast('Contoh Minit Curai KPM berjaya dimuatkan ke dalam borang.', 'success');
+        };
+
         // ==================== MODAL TETAPAN STORAN & GOOGLE DRIVE ====================
         window.openStorageSettingsModal = function() {
             document.getElementById('modalLocalCount').textContent = allRecords.length;
@@ -2202,6 +2346,7 @@ _Dijana melalui Sistem e-Minit Curai SRATI (Piawaian KPM)_`;
             tabs.forEach(t => {
                 const viewEl = document.getElementById(`view-${t}`);
                 const btnEl = document.getElementById(`tab-${t}`);
+                if (!viewEl || !btnEl) return;
                 if (t === tabName) {
                     viewEl.classList.remove('hidden');
                     btnEl.classList.add('border-gold-400', 'text-gold-400', 'font-bold');
@@ -2316,7 +2461,8 @@ _Dijana melalui Sistem e-Minit Curai SRATI (Piawaian KPM)_`;
 
         // ==================== PERMULAAN APLIKASI ====================
         window.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('footerYear').textContent = new Date().getFullYear();
+            const footerYearEl = document.getElementById('footerYear');
+            if (footerYearEl) footerYearEl.textContent = new Date().getFullYear();
 
             // 1. Muat turun arkib rekod kekal dari localStorage
             allRecords = loadRecordsFromLocalStorage();
