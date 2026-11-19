@@ -184,10 +184,10 @@
                     </div>
 
                     <div class="flex items-center gap-2">
-                        <button type="button" onclick="openStorageSettingsModal()" class="bg-white/10 hover:bg-white/20 text-white border border-white/15 font-semibold text-xs px-3 py-2 rounded-lg transition flex items-center gap-1.5" title="Konfigurasi Storan Tempatan & Awan Firebase">
-                            <i class="fa-solid fa-database text-gold-400"></i>
-                            <span class="hidden sm:inline">Tetapan Storan & Awan</span>
-                            <span class="sm:hidden">Storan</span>
+                        <button type="button" onclick="openStorageSettingsModal()" class="bg-white/10 hover:bg-white/20 text-white border border-white/15 font-semibold text-xs px-3 py-2 rounded-lg transition flex items-center gap-1.5" title="Konfigurasi Storan Tempatan & Google Drive">
+                            <i class="fa-brands fa-google-drive text-gold-400"></i>
+                            <span class="hidden sm:inline">Tetapan Google Drive</span>
+                            <span class="sm:hidden">Drive</span>
                         </button>
                         <button type="button" onclick="resetToNewForm(true)" class="bg-gold-500 hover:bg-gold-400 text-srati-950 font-extrabold text-xs px-3 py-2 rounded-lg shadow transition flex items-center gap-1.5 shrink-0">
                             <i class="fa-solid fa-file-circle-plus"></i>
@@ -633,129 +633,24 @@
                             <option value="PENDING">Ada Tindakan Belum Selesai</option>
                             <option value="COMPLETED">Semua Tindakan Selesai</option>
                         </select>
+                        <button type="button" id="btnManualDriveSync" onclick="syncFromGoogleDrive(false)" class="hidden rounded-xl border border-emerald-300 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 px-3 py-2.5 text-xs font-bold transition flex items-center gap-1.5" title="Muat turun rekod terkini daripada Google Sheet">
+                            <i class="fa-solid fa-rotate"></i>
+                            <span>Segerak Drive</span>
+                        </button>
                     </div>
                 </div>
             </div>
-
-            <!-- Senarai Kad Rekod -->
-            <div id="archiveRecordsContainer" class="space-y-4">
-                <!-- Dijana oleh JavaScript -->
-            </div>
-        </section>
-
-        <!-- ==================== TAB 4: HEBAHAN & SANDARAN JSON ==================== -->
-        <section id="view-json" class="no-print hidden fade-in">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                
-                <!-- Penjana Ringkasan Pantas WhatsApp / Telegram -->
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 flex flex-col justify-between space-y-4">
-                    <div>
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800">
-                                Perkongsian Pantas Guru
-                            </span>
-                            <i class="fa-brands fa-whatsapp text-2xl text-emerald-600"></i>
-                        </div>
-                        <h3 class="text-lg font-bold text-slate-800">Penjana Ringkasan WhatsApp / Telegram</h3>
-                        <p class="text-xs text-slate-500 mt-1">
-                            Teks hebahan ini dijana secara automatik daripada borang Minit Curai semasa anda untuk dikongsi terus ke dalam grup rasmi guru SRATI.
-                        </p>
-
-                        <div id="whatsappPreviewBox" class="mt-4 bg-slate-50 rounded-xl p-4 text-xs text-slate-800 font-mono whitespace-pre-line border border-slate-200 max-h-80 overflow-y-auto leading-relaxed">
-                            <!-- Dijana oleh JavaScript -->
-                        </div>
-                    </div>
-
-                    <button type="button" onclick="copyWhatsAppSummary()" class="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm shadow transition flex items-center justify-center gap-2">
-                        <i class="fa-regular fa-copy"></i>
-                        <span>Salin Teks Hebahan</span>
-                    </button>
-                </div>
-
-                <!-- Sistem Sandaran & Pemulihan Fail .JSON -->
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 space-y-5">
-                    <div>
-                        <span class="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-amber-100 text-amber-800">
-                            Mudah Alih & Sandaran Luar Talian
-                        </span>
-                        <h3 class="text-lg font-bold text-slate-800 mt-2">Pengurusan Fail Data (.JSON)</h3>
-                        <p class="text-xs text-slate-600 mt-1 leading-relaxed">
-                            Gunakan format <code>.json</code> untuk memindahkan rekod Minit Curai antara komputer sekolah, komputer riba rumah, atau membuat sandaran arkib tahunan.
-                        </p>
-                    </div>
-
-                    <!-- Muat Turun JSON -->
-                    <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
-                        <h4 class="text-sm font-bold text-slate-800 flex items-center gap-2">
-                            <i class="fa-solid fa-download text-srati-700"></i>
-                            <span>Muat Turun Fail Sandaran (.JSON)</span>
-                        </h4>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                            <button type="button" onclick="downloadCurrentJSON()" class="p-3.5 rounded-xl bg-white hover:bg-srati-50 border border-slate-300 text-left transition group shadow-2xs">
-                                <div class="text-xs font-bold text-slate-800 group-hover:text-srati-800 flex items-center justify-between">
-                                    <span>Rekod Semasa (.json)</span>
-                                    <i class="fa-solid fa-file-code text-srati-600"></i>
-                                </div>
-                                <div class="text-[11px] text-slate-500 mt-1">Muat turun minit yang sedang dibuka dalam borang.</div>
-                            </button>
-                            <button type="button" onclick="downloadAllRecordsJSON()" class="p-3.5 rounded-xl bg-white hover:bg-amber-50 border border-slate-300 text-left transition group shadow-2xs">
-                                <div class="text-xs font-bold text-slate-800 group-hover:text-amber-800 flex items-center justify-between">
-                                    <span>Semua Arkib (.json)</span>
-                                    <i class="fa-solid fa-boxes-stacked text-amber-600"></i>
-                                </div>
-                                <div class="text-[11px] text-slate-500 mt-1">Muat turun keseluruhan rekod dalam arkib kekal.</div>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Muat Naik / Pulihkan JSON -->
-                    <div class="p-4 rounded-xl bg-emerald-50/60 border-2 border-dashed border-srati-300 space-y-3">
-                        <h4 class="text-sm font-bold text-srati-900 flex items-center gap-2">
-                            <i class="fa-solid fa-upload text-srati-700"></i>
-                            <span>Muat Naik / Pulihkan Fail (.JSON)</span>
-                        </h4>
-                        <p class="text-xs text-slate-600">
-                            Pilih fail <code>.json</code> Minit Curai tunggal (akan dibuka ke dalam borang) atau fail sandaran arkib pukal (akan digabungkan ke dalam arkib kekal).
-                        </p>
-                        <label class="flex flex-col items-center justify-center p-6 bg-white rounded-xl border border-slate-200 cursor-pointer hover:border-srati-600 hover:bg-srati-50/40 transition">
-                            <i class="fa-solid fa-cloud-arrow-up text-3xl text-srati-600 mb-2"></i>
-                            <span class="text-xs font-bold text-slate-800">Klik di sini untuk memilih fail .JSON</span>
-                            <span class="text-[11px] text-slate-400 mt-1">Menyokong fail tunggal & arkib penuh (.json)</span>
-                            <input type="file" id="jsonFileInput" accept=".json,application/json" onchange="handleJSONUpload(event)" class="hidden">
-                        </label>
-                    </div>
-                </div>
-
-            </div>
-        </section>
-
-    </main>
-
-    <!-- ==================== FOOTER ==================== -->
-    <footer class="no-print bg-white border-t border-slate-200 py-4 mt-8">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-500">
-            <div>
-                &copy; <span id="footerYear">2026</span> <strong>SRA Tarbiyyah Islamiyah (SABK)</strong> • Sistem e-Minit Curai Piawaian KPM.
-            </div>
-            <div class="flex items-center gap-3">
-                <span>Storan Kekal GitHub Pages</span>
-                <span>•</span>
-                <span>Cetakan Rasmi A4 & Word</span>
-            </div>
-        </div>
-    </footer>
-
-    <!-- ==================== MODAL TETAPAN STORAN & AWAN FIREBASE ==================== -->
+    <!-- ==================== MODAL TETAPAN STORAN & GOOGLE DRIVE ==================== -->
     <div id="storageModalBackdrop" class="no-print fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 fade-in max-h-[90vh] overflow-y-auto">
             <div class="flex items-center justify-between pb-3 border-b border-slate-200">
                 <div class="flex items-center gap-2.5">
                     <div class="w-9 h-9 rounded-xl bg-srati-800 text-gold-400 flex items-center justify-center">
-                        <i class="fa-solid fa-database"></i>
+                        <i class="fa-brands fa-google-drive text-lg"></i>
                     </div>
                     <div>
-                        <h3 class="text-base font-bold text-slate-900">Tetapan Storan Kekal & Awan</h3>
-                        <p class="text-[11px] text-slate-500">Enjin Hibrid GitHub Pages (localStorage + Firebase)</p>
+                        <h3 class="text-base font-bold text-slate-900">Tetapan Storan & Google Drive</h3>
+                        <p class="text-[11px] text-slate-500">Enjin Hibrid GitHub Pages (localStorage + Google Sheets)</p>
                     </div>
                 </div>
                 <button type="button" onclick="closeStorageSettingsModal()" class="text-slate-400 hover:text-slate-700 p-1">
@@ -776,56 +671,34 @@
                     </p>
                 </div>
 
-                <!-- Konfigurasi Firebase Firestore Pilihan -->
-                <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-2.5">
+                <!-- Konfigurasi Google Apps Script / Google Drive -->
+                <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
                     <div class="font-bold text-slate-800 flex items-center justify-between">
-                        <span><i class="fa-solid fa-cloud text-blue-600 mr-1.5"></i>Penyelarasan Awan Firebase Firestore (Pilihan)</span>
-                        <span id="modalCloudBadge" class="px-2 py-0.5 rounded bg-slate-200 text-slate-700 font-bold text-[10px]">TIDAK DIKONFIGURASI</span>
+                        <span><i class="fa-solid fa-table text-emerald-700 mr-1.5"></i>Penyelarasan Google Sheets / Drive</span>
+                        <span id="modalCloudBadge" class="px-2 py-0.5 rounded bg-slate-200 text-slate-700 font-bold text-[10px]">MOD TEMPATAN</span>
                     </div>
                     <p class="text-slate-600 leading-relaxed">
-                        Jika anda mahu berkongsi arkib rekod merentas peranti (telefon & komputer berbeza), tampal objek JSON <code>firebaseConfig</code> projek Firebase anda di bawah atau terus ke dalam pemboleh ubah <code>CUSTOM_FIREBASE_CONFIG</code> dalam fail <code>index.html</code>:
+                        Tampal pautan <strong>Web App URL</strong> daripada Google Apps Script anda di bawah (atau masukkan terus ke dalam pemboleh ubah <code>CUSTOM_GOOGLE_SCRIPT_URL</code> dalam fail <code>index.html</code> di GitHub):
                     </p>
-                    <textarea id="firebaseConfigInput" rows="5" placeholder='{
-  "apiKey": "AIzaSy...",
-  "authDomain": "projek-anda.firebaseapp.com",
-  "projectId": "projek-anda",
-  "storageBucket": "projek-anda.firebasestorage.app",
-  "messagingSenderId": "123456789",
-  "appId": "1:123456789:web:abcdef"
-}' class="w-full rounded-xl border border-slate-300 bg-white p-2.5 font-mono text-[11px] focus:ring-2 focus:ring-srati-600 outline-none"></textarea>
+                    <input type="url" id="googleScriptUrlInput" placeholder="https://script.google.com/macros/s/AKfycb.../exec" class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 font-mono text-[11px] focus:ring-2 focus:ring-srati-600 outline-none">
                     
-                    <div class="flex flex-wrap items-center justify-end gap-2 pt-1">
-                        <button type="button" onclick="clearSavedFirebaseConfig()" class="px-3 py-2 rounded-lg border border-red-200 text-red-700 hover:bg-red-50 font-semibold transition">
-                            Padam Konfigurasi Awan
+                    <div class="p-2.5 rounded-lg bg-amber-50 border border-amber-200 flex items-center justify-between gap-2">
+                        <span class="text-[11px] text-amber-900">Belum pasang skrip di Google Sheet?</span>
+                        <button type="button" onclick="copyGoogleAppsScriptCode()" class="px-2.5 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-700 text-white font-bold text-[11px] shrink-0 transition flex items-center gap-1">
+                            <i class="fa-regular fa-copy"></i>
+                            <span>Salin Kod Apps Script</span>
                         </button>
-                        <button type="button" onclick="saveCustomFirebaseConfigFromModal()" class="px-4 py-2 rounded-lg bg-srati-700 hover:bg-srati-800 text-white font-bold shadow transition">
-                            Simpan & Sambung Firebase
+                    </div>
+
+                    <div class="flex flex-wrap items-center justify-end gap-2 pt-1">
+                        <button type="button" onclick="clearSavedGoogleScriptUrl()" class="px-3 py-2 rounded-lg border border-red-200 text-red-700 hover:bg-red-50 font-semibold transition">
+                            Putuskan Drive
+                        </button>
+                        <button type="button" onclick="saveGoogleScriptUrlFromModal()" class="px-4 py-2 rounded-lg bg-srati-700 hover:bg-srati-800 text-white font-bold shadow transition">
+                            Simpan & Segerak Drive
                         </button>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ==================== MODAL PENGESAHAN TERSUAI ==================== -->
-    <div id="customModalBackdrop" class="no-print fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden items-center justify-center p-4">
-        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 fade-in">
-            <div class="flex items-start gap-3.5">
-                <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-lg shrink-0">
-                    <i class="fa-solid fa-triangle-exclamation"></i>
-                </div>
-                <div class="flex-1">
-                    <h3 id="modalTitle" class="text-base font-bold text-slate-900">Pengesahan Tindakan</h3>
-                    <p id="modalMessage" class="text-xs sm:text-sm text-slate-600 mt-1.5 leading-relaxed">Adakah anda pasti?</p>
-                </div>
-            </div>
-            <div class="mt-6 flex items-center justify-end gap-2.5">
-                <button type="button" onclick="closeCustomModal()" class="px-4 py-2 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-50 text-xs font-bold transition">
-                    Batal
-                </button>
-                <button type="button" id="modalConfirmBtn" class="px-4 py-2 rounded-xl bg-srati-700 hover:bg-srati-800 text-white text-xs font-bold shadow transition">
-                    Ya, Teruskan
-                </button>
             </div>
         </div>
     </div>
@@ -834,47 +707,158 @@
     <div id="toastContainer" class="no-print fixed bottom-5 right-5 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none px-4 sm:px-0"></div>
 
     <!-- ==================== SKRIP UTAMA: ENJIN STORAN HIBRID & LOGIK APLIKASI ==================== -->
-    <script type="module">
-        import { initializeApp, getApps, deleteApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
+    <script>
         // =========================================================================
-        // KONFIGURASI PILIHAN FIREBASE FIRESTORE (UNTUK PENYELARASAN AWAN)
-        // Tampal objek konfigurasi projek Firebase anda di bawah jika ingin berkongsi
-        // data merentas peranti di GitHub Pages. Jika dibiarkan null, aplikasi tetap
-        // menyimpan data secara kekal menggunakan localStorage pelayar.
+        // KONFIGURASI GOOGLE DRIVE / GOOGLE SHEETS (GOOGLE APPS SCRIPT WEB APP)
+        // Tampal URL Web App Google Apps Script anda di antara tanda petik di bawah
+        // jika ingin semua guru SRATI disambungkan terus ke Google Sheet sekolah.
         // =========================================================================
-        const CUSTOM_FIREBASE_CONFIG = null;
-        /* Contoh format CUSTOM_FIREBASE_CONFIG:
-        const CUSTOM_FIREBASE_CONFIG = {
-            apiKey: "AIzaSyXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
-            authDomain: "minit-curai-srati.firebaseapp.com",
-            projectId: "minit-curai-srati",
-            storageBucket: "minit-curai-srati.firebasestorage.app",
-            messagingSenderId: "123456789012",
-            appId: "1:123456789012:web:abcdef1234567890"
-        };
-        */
+        const CUSTOM_GOOGLE_SCRIPT_URL = "";
+        // Contoh: const CUSTOM_GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx.../exec";
 
         // Kunci Storan Kekal Tempatan (GitHub Pages Ready)
         const STORAGE_KEY = 'srati_minit_curai_rekod_v1';
         const DRAFT_KEY = 'srati_minit_curai_draf_v1';
-        const FIREBASE_CFG_STORAGE_KEY = 'srati_custom_firebase_cfg_v1';
+        const GSCRIPT_URL_STORAGE_KEY = 'srati_google_script_url_v1';
         const LOGO_URL = 'https://i.postimg.cc/3JjNh7X3/LOGO-SRATI-SABK.png';
+
+        // Kod Templat Google Apps Script (Sedia disalin 1-klik)
+        const APPS_SCRIPT_TEMPLATE = `const SHEET_NAME = 'Rekod_Minit_Curai';
+
+function getOrCreateSheet() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  let sheet = ss.getSheetByName(SHEET_NAME);
+  if (!sheet) {
+    sheet = ss.insertSheet(SHEET_NAME);
+  }
+  if (sheet.getLastRow() === 0) {
+    const headers = [
+      'ID Rekod', 'Tarikh Program', 'Hari', 'Masa', 'Kategori',
+      'Tajuk Program', 'Anjuran', 'Tempat', 'Nama Guru', 'Jawatan',
+      'No. Rujukan', 'Ringkasan Isi Penting', 'Tindakan Susulan',
+      'Kemaskini Terakhir', 'Data_JSON_Penuh'
+    ];
+    sheet.appendRow(headers);
+    sheet.getRange(1, 1, 1, headers.length)
+      .setFontWeight('bold')
+      .setBackground('#065f46')
+      .setFontColor('#ffffff');
+    sheet.setFrozenRows(1);
+  }
+  return sheet;
+}
+
+function doGet(e) {
+  try {
+    const sheet = getOrCreateSheet();
+    const lastRow = sheet.getLastRow();
+    const records = [];
+    if (lastRow > 1) {
+      const data = sheet.getRange(2, 15, lastRow - 1, 1).getValues();
+      for (let i = 0; i < data.length; i++) {
+        if (data[i][0]) {
+          try { records.push(JSON.parse(data[i][0])); } catch (err) {}
+        }
+      }
+    }
+    return ContentService
+      .createTextOutput(JSON.stringify({ status: 'success', records: records }))
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch (error) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ status: 'error', message: error.toString() }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+function doPost(e) {
+  try {
+    const sheet = getOrCreateSheet();
+    const payload = JSON.parse(e.postData.contents);
+    const action = payload.action;
+
+    if (action === 'upsert' && payload.record) {
+      const rec = payload.record;
+      const agendaText = (rec.agendaItems || [])
+        .map((a, idx) => (idx + 1) + '. ' + (a.tajukPerkara ? a.tajukPerkara + ': ' : '') + (a.huraian || ''))
+        .join('\\n');
+      const actionText = (rec.actionItems || [])
+        .filter(a => a.perkara && a.perkara.trim())
+        .map((a, idx) => (idx + 1) + '. ' + a.perkara + ' [' + (a.pelaksana || '-') + ' - ' + (a.status || 'Belum Mula') + ']')
+        .join('\\n');
+
+      const rowValues = [
+        rec.id || '', rec.tarikh || '', rec.hari || '',
+        (rec.masaMula || '') + ' - ' + (rec.masaTamat || ''),
+        rec.kategori || '', rec.tajuk || '', rec.anjuran || '',
+        rec.tempat || '', rec.namaGuru || '', rec.jawatan || '',
+        rec.rujukan || '', agendaText, actionText,
+        rec.updatedAt || new Date().toISOString(),
+        JSON.stringify(rec)
+      ];
+
+      const lastRow = sheet.getLastRow();
+      let foundRow = -1;
+      if (lastRow > 1) {
+        const ids = sheet.getRange(2, 1, lastRow - 1, 1).getValues();
+        for (let i = 0; i < ids.length; i++) {
+          if (String(ids[i][0]) === String(rec.id)) {
+            foundRow = i + 2;
+            break;
+          }
+        }
+      }
+
+      if (foundRow > -1) {
+        sheet.getRange(foundRow, 1, 1, rowValues.length).setValues([rowValues]);
+      } else {
+        sheet.appendRow(rowValues);
+      }
+      return ContentService
+        .createTextOutput(JSON.stringify({ status: 'success', id: rec.id }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+
+    if (action === 'delete' && payload.id) {
+      const lastRow = sheet.getLastRow();
+      if (lastRow > 1) {
+        const ids = sheet.getRange(2, 1, lastRow - 1, 1).getValues();
+        for (let i = ids.length - 1; i >= 0; i--) {
+          if (String(ids[i][0]) === String(payload.id)) {
+            sheet.deleteRow(i + 2);
+          }
+        }
+      }
+      return ContentService
+        .createTextOutput(JSON.stringify({ status: 'success', deletedId: payload.id }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+
+    if (action === 'bulk_merge' && Array.isArray(payload.records)) {
+      payload.records.forEach(function(rec) {
+        doPost({ postData: { contents: JSON.stringify({ action: 'upsert', record: rec }) } });
+      });
+      return ContentService
+        .createTextOutput(JSON.stringify({ status: 'success', count: payload.records.length }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+
+    return ContentService
+      .createTextOutput(JSON.stringify({ status: 'error', message: 'Tindakan tidak sah' }))
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch (error) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ status: 'error', message: error.toString() }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}`;
 
         // Pemboleh Ubah Keadaan Aplikasi
         let allRecords = [];
         let currentMinit = null;
         let activeTab = 'editor';
-
-        // Pemboleh Ubah Firebase (Pilihan)
-        let db = null;
-        let auth = null;
-        let currentUser = null;
-        let isCloudConnected = false;
-        let unsubscribeCloud = null;
-        let activeCollectionPath = ['srati_minit_curai'];
+        let activeGoogleScriptUrl = '';
+        let isDriveConnected = false;
 
         // Bank Frasa Rasmi KPM
         const KPM_PHRASE_BANK = [
@@ -1014,8 +998,8 @@
             const metaEl = document.getElementById('storageStatusMeta');
             const dotEl = document.getElementById('storageStatusDot');
 
-            if (isCloudConnected) {
-                titleEl.textContent = 'Storan Kekal + Awan Firebase Aktif';
+            if (isDriveConnected) {
+                titleEl.textContent = 'Storan Kekal + Google Drive Aktif';
                 dotEl.className = 'w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399] shrink-0';
             } else {
                 titleEl.textContent = 'Storan Kekal Aktif • Disimpan Automatik';
@@ -1026,132 +1010,119 @@
             }
         }
 
-        // ==================== PENYELARASAN PILIHAN FIREBASE FIRESTORE ====================
-        function resolveActiveFirebaseConfig() {
-            // 1. Semak pemboleh ubah atas kod
-            if (CUSTOM_FIREBASE_CONFIG && typeof CUSTOM_FIREBASE_CONFIG === 'object' && CUSTOM_FIREBASE_CONFIG.apiKey) {
-                return { config: CUSTOM_FIREBASE_CONFIG, isSandbox: false };
+        // ==================== ENJIN PENYELARASAN GOOGLE DRIVE / SHEETS ====================
+        function resolveGoogleScriptUrl() {
+            if (CUSTOM_GOOGLE_SCRIPT_URL && CUSTOM_GOOGLE_SCRIPT_URL.trim().startsWith('http')) {
+                return CUSTOM_GOOGLE_SCRIPT_URL.trim();
             }
-            // 2. Semak konfigurasi yang disimpan melalui modal Tetapan Storan
-            try {
-                const savedCfgStr = localStorage.getItem(FIREBASE_CFG_STORAGE_KEY);
-                if (savedCfgStr) {
-                    const parsed = JSON.parse(savedCfgStr);
-                    if (parsed && parsed.apiKey) {
-                        return { config: parsed, isSandbox: false };
-                    }
-                }
-            } catch (e) { /* abaikan ralat parse */ }
-
-            // 3. Semak persekitaran sandbox (jika ada)
-            if (typeof __firebase_config !== 'undefined' && __firebase_config) {
-                try {
-                    return { config: JSON.parse(__firebase_config), isSandbox: true };
-                } catch (e) { /* abaikan */ }
+            const saved = localStorage.getItem(GSCRIPT_URL_STORAGE_KEY);
+            if (saved && saved.trim().startsWith('http')) {
+                return saved.trim();
             }
-
-            return null;
+            return '';
         }
 
-        async function initHybridCloudSync() {
-            const resolved = resolveActiveFirebaseConfig();
+        async function initGoogleDriveSync() {
+            activeGoogleScriptUrl = resolveGoogleScriptUrl();
             const modalBadge = document.getElementById('modalCloudBadge');
+            const syncBtn = document.getElementById('btnManualDriveSync');
 
-            if (!resolved) {
-                isCloudConnected = false;
+            if (!activeGoogleScriptUrl) {
+                isDriveConnected = false;
                 if (modalBadge) {
                     modalBadge.textContent = 'MOD STORAN TEMPATAN';
                     modalBadge.className = 'px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold text-[10px]';
                 }
+                if (syncBtn) syncBtn.classList.add('hidden');
                 updateStorageBadge('Mod Kekal Pelayar (GitHub Pages)');
                 return;
             }
 
+            if (syncBtn) syncBtn.classList.remove('hidden');
+            await syncFromGoogleDrive(true);
+        }
+
+        window.syncFromGoogleDrive = async function(silent = false) {
+            if (!activeGoogleScriptUrl) return;
+            const modalBadge = document.getElementById('modalCloudBadge');
+
             try {
-                // Bersihkan instance lama jika menyambung semula konfigurasi baharu
-                const existingApps = getApps();
-                for (const existing of existingApps) {
-                    await deleteApp(existing);
-                }
+                updateStorageBadge('Menyegerak dengan Google Drive...');
+                const response = await fetch(activeGoogleScriptUrl, { method: 'GET' });
+                const result = await response.json();
 
-                const app = initializeApp(resolved.config);
-                auth = getAuth(app);
-                db = getFirestore(app);
-
-                if (resolved.isSandbox && typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                    const appId = typeof __app_id !== 'undefined' ? __app_id : 'srati-minit-curai-default';
-                    activeCollectionPath = ['artifacts', appId, 'public', 'data', 'minit_curai_srati'];
-                } else {
-                    await signInAnonymously(auth);
-                    activeCollectionPath = ['srati_minit_curai'];
-                }
-
-                onAuthStateChanged(auth, (user) => {
-                    if (user) {
-                        currentUser = user;
-                        isCloudConnected = true;
-                        if (modalBadge) {
-                            modalBadge.textContent = 'DISAMBUNGKAN KE AWAN';
-                            modalBadge.className = 'px-2 py-0.5 rounded bg-emerald-200 text-emerald-900 font-bold text-[10px]';
-                        }
-                        updateStorageBadge('Awan + Pelayar Diselaraskan');
-                        subscribeToFirestoreCollection();
+                if (result && result.status === 'success' && Array.isArray(result.records)) {
+                    isDriveConnected = true;
+                    if (modalBadge) {
+                        modalBadge.textContent = 'GOOGLE DRIVE DISAMBUNG';
+                        modalBadge.className = 'px-2 py-0.5 rounded bg-emerald-200 text-emerald-900 font-bold text-[10px]';
                     }
-                });
+
+                    // Gabungkan rekod dari Google Sheet dengan rekod tempatan
+                    const mergedMap = new Map();
+                    allRecords.forEach(r => mergedMap.set(r.id, r));
+                    result.records.forEach(driveRec => {
+                        if (driveRec && driveRec.id) {
+                            const localRec = mergedMap.get(driveRec.id);
+                            if (!localRec || new Date(driveRec.updatedAt || 0) >= new Date(localRec.updatedAt || 0)) {
+                                mergedMap.set(driveRec.id, driveRec);
+                            }
+                        }
+                    });
+
+                    allRecords = Array.from(mergedMap.values()).sort(
+                        (a, b) => new Date(b.updatedAt || b.createdAt || 0) - new Date(a.updatedAt || a.createdAt || 0)
+                    );
+                    saveRecordsToLocalStorage(allRecords);
+                    updateArchiveStats();
+                    renderArchiveList();
+                    updateStorageBadge(`Drive Diselaraskan (${allRecords.length} rekod)`);
+
+                    if (!silent) {
+                        showToast(`Berjaya menyegerakkan ${result.records.length} rekod dari Google Drive!`, 'success');
+                    }
+                } else {
+                    throw new Error('Respons tidak sah daripada Apps Script');
+                }
             } catch (error) {
-                console.warn('Sambungan Firebase pilihan tidak aktif, menggunakan localStorage sepenuhnya:', error);
-                isCloudConnected = false;
+                console.warn('Ralat penyelarasan Google Drive:', error);
+                isDriveConnected = false;
                 if (modalBadge) {
-                    modalBadge.textContent = 'RALAT KUNCI FIREBASE';
+                    modalBadge.textContent = 'RALAT SAMBUNGAN DRIVE';
                     modalBadge.className = 'px-2 py-0.5 rounded bg-red-100 text-red-700 font-bold text-[10px]';
                 }
-                updateStorageBadge('Mod Kekal Pelayar (Sandaran Aktif)');
+                updateStorageBadge('Mod Kekal Pelayar (Drive Gagal)');
+                if (!silent) {
+                    showToast('Gagal menyambung ke Google Drive. Semak semula URL Web App & tetapan akses "Anyone".', 'error');
+                }
+            }
+        };
+
+        async function pushRecordToGoogleDrive(record) {
+            if (!activeGoogleScriptUrl) return false;
+            try {
+                const response = await fetch(activeGoogleScriptUrl, {
+                    method: 'POST',
+                    body: JSON.stringify({ action: 'upsert', record: record })
+                });
+                const resJson = await response.json();
+                return resJson && resJson.status === 'success';
+            } catch (e) {
+                console.error('Gagal menghantar rekod ke Google Sheet:', e);
+                return false;
             }
         }
 
-        function subscribeToFirestoreCollection() {
-            if (!db || !currentUser) return;
-            if (unsubscribeCloud) unsubscribeCloud();
-
-            const colRef = collection(db, ...activeCollectionPath);
-            unsubscribeCloud = onSnapshot(colRef, (snapshot) => {
-                const cloudMap = new Map();
-                snapshot.forEach((docSnap) => {
-                    const data = docSnap.data();
-                    let agenda = [];
-                    let actions = [];
-                    try {
-                        agenda = typeof data.agendaItems === 'string' ? JSON.parse(data.agendaItems) : (data.agendaItems || []);
-                        actions = typeof data.actionItems === 'string' ? JSON.parse(data.actionItems) : (data.actionItems || []);
-                    } catch (e) { /* abaikan */ }
-
-                    cloudMap.set(docSnap.id, {
-                        ...data,
-                        id: docSnap.id,
-                        agendaItems: agenda,
-                        actionItems: actions
-                    });
+        async function deleteRecordFromGoogleDrive(id) {
+            if (!activeGoogleScriptUrl) return;
+            try {
+                await fetch(activeGoogleScriptUrl, {
+                    method: 'POST',
+                    body: JSON.stringify({ action: 'delete', id: id })
                 });
-
-                // Gabungkan rekod awan dengan rekod localStorage tanpa kehilangan data tempatan
-                const mergedMap = new Map();
-                allRecords.forEach(r => mergedMap.set(r.id, r));
-                cloudMap.forEach((cRec, id) => {
-                    const localRec = mergedMap.get(id);
-                    if (!localRec || new Date(cRec.updatedAt || 0) >= new Date(localRec.updatedAt || 0)) {
-                        mergedMap.set(id, cRec);
-                    }
-                });
-
-                allRecords = Array.from(mergedMap.values()).sort(
-                    (a, b) => new Date(b.updatedAt || b.createdAt || 0) - new Date(a.updatedAt || a.createdAt || 0)
-                );
-
-                saveRecordsToLocalStorage(allRecords);
-                updateArchiveStats();
-                renderArchiveList();
-            });
+            } catch (e) {
+                console.error('Gagal memadam baris di Google Sheet:', e);
+            }
         }
 
         // ==================== SIMPAN KE ARKIB REKOD KEKAL ====================
@@ -1169,7 +1140,7 @@
             currentMinit.updatedAt = nowIso;
             if (!currentMinit.createdAt) currentMinit.createdAt = nowIso;
 
-            // 1. Kemas kini dalam senarai rekod dan simpan kekal ke localStorage
+            // 1. Simpan kekal ke localStorage
             const clonedRecord = JSON.parse(JSON.stringify(currentMinit));
             const existingIndex = allRecords.findIndex(r => r.id === recordId);
             if (existingIndex > -1) {
@@ -1184,19 +1155,15 @@
             renderArchiveList();
             updateEditorBanner();
 
-            // 2. Jika Firebase aktif, selaraskan juga ke awan Firestore
-            if (isCloudConnected && db && currentUser) {
-                try {
-                    const docRef = doc(db, ...activeCollectionPath, recordId);
-                    await setDoc(docRef, {
-                        ...clonedRecord,
-                        agendaItems: JSON.stringify(clonedRecord.agendaItems),
-                        actionItems: JSON.stringify(clonedRecord.actionItems)
-                    });
-                    showToast('Minit Curai disimpan kekal ke Arkib & Awan Firebase!', 'success');
+            // 2. Jika Google Drive / Sheets disambungkan, hantar terus ke Google Sheet
+            if (activeGoogleScriptUrl) {
+                updateStorageBadge('Menyimpan ke Google Sheet...');
+                const driveOk = await pushRecordToGoogleDrive(clonedRecord);
+                if (driveOk) {
+                    isDriveConnected = true;
+                    updateStorageBadge('Disimpan ke Arkib & Google Drive');
+                    showToast('Minit Curai disimpan kekal & direkodkan terus ke Google Sheet!', 'success');
                     return;
-                } catch (err) {
-                    console.error('Ralat penyelarasan awan:', err);
                 }
             }
 
@@ -1859,6 +1826,7 @@ _Dijana melalui Sistem e-Minit Curai SRATI (Piawaian KPM)_`;
             allRecords.forEach(r => map.set(r.id, r));
 
             let importedCount = 0;
+            const cleanBatch = [];
             for (const item of importedList) {
                 const recId = item.id || `MC_IMP_${Date.now()}_${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
                 const cleanItem = {
@@ -1868,23 +1836,24 @@ _Dijana melalui Sistem e-Minit Curai SRATI (Piawaian KPM)_`;
                     updatedAt: item.updatedAt || new Date().toISOString()
                 };
                 map.set(recId, cleanItem);
+                cleanBatch.push(cleanItem);
                 importedCount++;
-
-                if (isCloudConnected && db && currentUser) {
-                    try {
-                        await setDoc(doc(db, ...activeCollectionPath, recId), {
-                            ...cleanItem,
-                            agendaItems: JSON.stringify(cleanItem.agendaItems || []),
-                            actionItems: JSON.stringify(cleanItem.actionItems || [])
-                        });
-                    } catch (e) { /* abaikan ralat individu */ }
-                }
             }
 
             allRecords = Array.from(map.values()).sort(
                 (a, b) => new Date(b.updatedAt || b.createdAt || 0) - new Date(a.updatedAt || a.createdAt || 0)
             );
             saveRecordsToLocalStorage(allRecords);
+
+            if (activeGoogleScriptUrl && cleanBatch.length > 0) {
+                try {
+                    await fetch(activeGoogleScriptUrl, {
+                        method: 'POST',
+                        body: JSON.stringify({ action: 'bulk_merge', records: cleanBatch })
+                    });
+                } catch (e) { /* abaikan ralat individu */ }
+            }
+
             updateArchiveStats();
             renderArchiveList();
             switchTab('archive');
@@ -2089,10 +2058,8 @@ _Dijana melalui Sistem e-Minit Curai SRATI (Piawaian KPM)_`;
                         updateEditorBanner();
                     }
 
-                    if (isCloudConnected && db && currentUser) {
-                        try {
-                            await deleteDoc(doc(db, ...activeCollectionPath, id));
-                        } catch (e) { /* abaikan */ }
+                    if (activeGoogleScriptUrl) {
+                        await deleteRecordFromGoogleDrive(id);
                     }
 
                     updateArchiveStats();
@@ -2173,20 +2140,11 @@ _Dijana melalui Sistem e-Minit Curai SRATI (Piawaian KPM)_`;
                 tarikhSedia: today,
                 pengesah: 'Guru Besar, SRA Tarbiyyah Islamiyah (SABK)',
                 ulasanPentadbir: '',
-                createdAt: new Date().toISOString(),
-                updatedAt: new Date().toISOString()
-            };
-
-            populateFormFromState();
-            saveDraftToLocalStorage();
-            showToast('Contoh pengisian Minit Curai KPM berjaya dimuatkan!', 'success');
-        };
-
-        // ==================== MODAL TETAPAN STORAN & AWAN ====================
+        // ==================== MODAL TETAPAN STORAN & GOOGLE DRIVE ====================
         window.openStorageSettingsModal = function() {
             document.getElementById('modalLocalCount').textContent = allRecords.length;
-            const savedCfg = localStorage.getItem(FIREBASE_CFG_STORAGE_KEY);
-            document.getElementById('firebaseConfigInput').value = savedCfg || '';
+            const savedUrl = localStorage.getItem(GSCRIPT_URL_STORAGE_KEY) || CUSTOM_GOOGLE_SCRIPT_URL || '';
+            document.getElementById('googleScriptUrlInput').value = savedUrl;
             const modal = document.getElementById('storageModalBackdrop');
             modal.classList.remove('hidden');
             modal.classList.add('flex');
@@ -2198,33 +2156,42 @@ _Dijana melalui Sistem e-Minit Curai SRATI (Piawaian KPM)_`;
             modal.classList.remove('flex');
         };
 
-        window.saveCustomFirebaseConfigFromModal = async function() {
-            const rawInput = document.getElementById('firebaseConfigInput').value.trim();
-            if (!rawInput) {
-                showToast('Sila tampal objek JSON firebaseConfig terlebih dahulu.', 'warning');
+        window.saveGoogleScriptUrlFromModal = async function() {
+            const rawUrl = document.getElementById('googleScriptUrlInput').value.trim();
+            if (!rawUrl || !rawUrl.startsWith('https://script.google.com/')) {
+                showToast('Sila masukkan pautan Web App URL Google Apps Script yang sah (bermula dengan https://script.google.com/).', 'warning');
                 return;
             }
-            try {
-                const parsed = JSON.parse(rawInput);
-                if (!parsed.apiKey || !parsed.projectId) {
-                    showToast('Konfigurasi tidak lengkap. Pastikan mengandungi apiKey dan projectId.', 'error');
-                    return;
-                }
-                localStorage.setItem(FIREBASE_CFG_STORAGE_KEY, JSON.stringify(parsed, null, 2));
-                closeStorageSettingsModal();
-                showToast('Konfigurasi Firebase disimpan. Menyambung ke awan...', 'info');
-                await initHybridCloudSync();
-            } catch (e) {
-                showToast('Format JSON tidak sah. Pastikan kunci dan nilai menggunakan tanda petik berganda (").', 'error');
-            }
+            localStorage.setItem(GSCRIPT_URL_STORAGE_KEY, rawUrl);
+            closeStorageSettingsModal();
+            showToast('Pautan Google Drive disimpan. Menyegerakkan rekod...', 'info');
+            await initGoogleDriveSync();
         };
 
-        window.clearSavedFirebaseConfig = async function() {
-            localStorage.removeItem(FIREBASE_CFG_STORAGE_KEY);
-            document.getElementById('firebaseConfigInput').value = '';
-            isCloudConnected = false;
+        window.clearSavedGoogleScriptUrl = function() {
+            localStorage.removeItem(GSCRIPT_URL_STORAGE_KEY);
+            document.getElementById('googleScriptUrlInput').value = '';
+            activeGoogleScriptUrl = CUSTOM_GOOGLE_SCRIPT_URL || '';
+            isDriveConnected = false;
+            document.getElementById('btnManualDriveSync').classList.add('hidden');
             updateStorageBadge('Mod Kekal Pelayar (GitHub Pages)');
-            showToast('Konfigurasi awan Firebase telah dipadam. Menggunakan storan pelayar.', 'info');
+            showToast('Sambungan Google Drive telah diputuskan. Menggunakan storan pelayar.', 'info');
+        };
+
+        window.copyGoogleAppsScriptCode = function() {
+            const textarea = document.createElement('textarea');
+            textarea.value = APPS_SCRIPT_TEMPLATE;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                showToast('Kod Google Apps Script berjaya disalin! Tampal di Extensions > Apps Script dalam Google Sheet anda.', 'success');
+            } catch (err) {
+                showToast('Gagal menyalin kod secara automatik.', 'error');
+            }
+            document.body.removeChild(textarea);
         };
 
         // ==================== NAVIGASI TAB & UTILITI UI ====================
@@ -2364,8 +2331,8 @@ _Dijana melalui Sistem e-Minit Curai SRATI (Piawaian KPM)_`;
             updateArchiveStats();
             renderArchiveList();
 
-            // 4. Mulakan penyelarasan awan Firebase jika dikonfigurasi
-            initHybridCloudSync();
+            // 4. Mulakan penyelarasan Google Drive / Sheets jika dikonfigurasi
+            initGoogleDriveSync();
         });
     </script>
 </body>
