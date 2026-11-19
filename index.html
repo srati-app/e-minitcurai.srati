@@ -1,0 +1,2003 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>e-Minit Curai SRATI | Sistem Pengurusan Minit Curai KPM</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Inter & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        srati: {
+                            50: '#ecfdf5',
+                            100: '#d1fae5',
+                            200: '#a7f3d0',
+                            600: '#059669',
+                            700: '#047857',
+                            800: '#065f46',
+                            900: '#064e3b',
+                        },
+                        gold: {
+                            400: '#fbbf24',
+                            500: '#f59e0b',
+                            600: '#d97706',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Gaya Khusus untuk Dokumen Rasmi KPM & Cetakan A4 */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+
+        .a4-paper {
+            width: 100%;
+            max-width: 210mm;
+            min-height: 297mm;
+            background: #ffffff;
+            margin: 0 auto;
+            padding: 15mm 18mm;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            font-family: Arial, Helvetica, sans-serif;
+            color: #000000;
+            line-height: 1.45;
+        }
+
+        .kpm-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 14px;
+            font-size: 10.5pt;
+        }
+
+        .kpm-table th, .kpm-table td {
+            border: 1px solid #1e293b;
+            padding: 7px 10px;
+            vertical-align: top;
+            text-align: left;
+        }
+
+        .kpm-table th {
+            background-color: #f1f5f9;
+            font-weight: bold;
+        }
+
+        /* Animasi Halus */
+        .fade-in {
+            animation: fadeIn 0.25s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Tetapan Cetakan PDF / Kertas A4 Rasmi */
+        @media print {
+            @page {
+                size: A4 portrait;
+                margin: 12mm 14mm;
+            }
+            body {
+                background: #ffffff !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .print-only-container {
+                display: block !important;
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            .a4-paper {
+                box-shadow: none !important;
+                padding: 0 !important;
+                max-width: 100% !important;
+                width: 100% !important;
+                min-height: auto !important;
+            }
+            .page-break-inside-avoid {
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- ==================== HEADER RASMI APLIKASI ==================== -->
+    <header class="no-print bg-gradient-to-r from-srati-900 via-srati-800 to-srati-900 text-white shadow-lg border-b-4 border-gold-500 sticky top-0 z-30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                <!-- Logo & Identiti Sekolah -->
+                <div class="flex items-center gap-3.5">
+                    <div class="w-13 h-13 sm:w-14 sm:h-14 rounded-xl bg-white/95 p-1 border-2 border-gold-400/80 flex items-center justify-center shrink-0 shadow-md overflow-hidden">
+                        <img id="headerSchoolLogoImg" src="https://i.postimg.cc/3JjNh7X3/LOGO-SRATI-SABK.png" alt="Logo SRA Tarbiyyah Islamiyah (SABK)" class="w-full h-full object-contain" onerror="this.onerror=null; this.src='https://placehold.co/120x120/065f46/fbbf24?text=SRATI';">
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <span class="text-[11px] font-bold tracking-wider uppercase px-2 py-0.5 rounded bg-gold-500 text-srati-900">Piawaian KPM</span>
+                            <span class="text-xs text-emerald-200 font-medium">Sistem Dokumentasi Rasmi Guru</span>
+                        </div>
+                        <h1 class="text-lg sm:text-xl font-display font-extrabold tracking-tight text-white leading-tight mt-0.5">
+                            Sistem e-Minit Curai SRATI
+                        </h1>
+                        <p class="text-xs text-emerald-100/90 hidden sm:block">
+                            SR Agama Tarbiyyah Islamiyah (SABK) • Piawaian KPM
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Status Simpanan Awan & Maklumat Pengguna -->
+                <div class="flex items-center justify-between md:justify-end gap-2 sm:gap-3 bg-black/20 px-3 py-2 rounded-xl border border-white/10">
+                    <div class="flex items-center gap-2">
+                        <span id="cloudStatusDot" class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse"></span>
+                        <div class="text-xs">
+                            <div id="cloudStatusText" class="font-semibold text-white">Menyambung Awan...</div>
+                            <div id="userIdDisplay" class="text-[10px] text-emerald-200 font-mono truncate max-w-[160px] sm:max-w-[220px]" title="ID Sesi Pengguna">ID: Memuatkan...</div>
+                        </div>
+                    </div>
+                    <button onclick="resetToNewForm(true)" class="bg-gold-500 hover:bg-gold-400 text-srati-950 font-bold text-xs px-3 py-2 rounded-lg shadow transition flex items-center gap-1.5 shrink-0">
+                        <i class="fa-solid fa-file-circle-plus"></i>
+                        <span>Minit Baharu</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bar Navigasi Utama -->
+        <nav class="bg-srati-950/60 border-t border-white/10">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex overflow-x-auto no-scrollbar">
+                <button id="tab-editor" onclick="switchTab('editor')" class="nav-tab active-tab flex items-center gap-2 px-4 py-3 text-xs sm:text-sm font-semibold border-b-2 border-gold-400 text-gold-400 whitespace-nowrap transition">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                    <span>1. Borang Minit Curai</span>
+                </button>
+                <button id="tab-preview" onclick="switchTab('preview')" class="nav-tab flex items-center gap-2 px-4 py-3 text-xs sm:text-sm font-semibold border-b-2 border-transparent text-emerald-100 hover:text-white whitespace-nowrap transition">
+                    <i class="fa-solid fa-print"></i>
+                    <span>2. Pratonton Rasmi A4 & Cetak</span>
+                </button>
+                <button id="tab-archive" onclick="switchTab('archive')" class="nav-tab flex items-center gap-2 px-4 py-3 text-xs sm:text-sm font-semibold border-b-2 border-transparent text-emerald-100 hover:text-white whitespace-nowrap transition">
+                    <i class="fa-solid fa-cloud"></i>
+                    <span>3. Arkib Rekod Awan</span>
+                    <span id="archiveCountBadge" class="ml-1 px-2 py-0.5 text-[11px] rounded-full bg-emerald-800 text-emerald-100 font-bold">0</span>
+                </button>
+                <button id="tab-json" onclick="switchTab('json')" class="nav-tab flex items-center gap-2 px-4 py-3 text-xs sm:text-sm font-semibold border-b-2 border-transparent text-emerald-100 hover:text-white whitespace-nowrap transition">
+                    <i class="fa-solid fa-file-code"></i>
+                    <span>4. Sistem Data JSON & Panduan</span>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- ==================== KANDUNGAN UTAMA ==================== -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+        <!-- ==================== TAB 1: BORANG EDITOR MINIT CURAI ==================== -->
+        <section id="view-editor" class="no-print fade-in">
+            <!-- Bar Status Rekod Semasa -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-srati-50 text-srati-700 flex items-center justify-center text-lg border border-srati-200 shrink-0">
+                        <i class="fa-solid fa-file-lines"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span id="editingModeBadge" class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-800">Draf Baharu</span>
+                            <span id="lastSavedLabel" class="text-xs text-slate-500">Belum disimpan ke awan</span>
+                        </div>
+                        <h2 id="editorBannerTitle" class="text-sm sm:text-base font-bold text-slate-800 mt-0.5 line-clamp-1">
+                            Sila lengkapkan maklumat taklimat, bengkel atau kursus di bawah
+                        </h2>
+                    </div>
+                </div>
+                <div class="flex flex-wrap items-center gap-2">
+                    <button type="button" onclick="fillSampleData()" class="px-3 py-2 text-xs font-semibold rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-50 transition flex items-center gap-1.5" title="Isi contoh Minit Curai KPM untuk rujukan">
+                        <i class="fa-solid fa-wand-magic-sparkles text-amber-500"></i>
+                        <span>Isi Contoh KPM</span>
+                    </button>
+                    <button type="button" onclick="saveCurrentToCloud()" id="btnSaveCloudTop" class="px-4 py-2 text-xs font-bold rounded-xl bg-srati-700 hover:bg-srati-800 text-white shadow-sm transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                        <span>Simpan ke Awan</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- LAJUR KIRI (8/12): BORANG RASMI KPM -->
+                <div class="lg:col-span-8 space-y-6">
+                    
+                    <!-- BAHAGIAN A: MAKLUMAT ASAS & KEHADIRAN -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                        <div class="bg-srati-800 text-white px-5 py-3.5 flex items-center justify-between">
+                            <div class="flex items-center gap-2.5">
+                                <span class="w-6 h-6 rounded-lg bg-gold-500 text-srati-950 font-extrabold text-xs flex items-center justify-center">A</span>
+                                <h3 class="font-bold text-sm sm:text-base">Maklumat Mesyuarat / Taklimat / Bengkel / Kursus</h3>
+                            </div>
+                            <span class="text-[11px] text-emerald-200 hidden sm:inline">Format Piawai KPM</span>
+                        </div>
+                        
+                        <div class="p-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <!-- Rujukan Fail / Siri -->
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">No. Rujukan Fail Sekolah (Jika ada)</label>
+                                <input type="text" id="f_rujukan" oninput="syncFormState()" placeholder="Contoh: SRATI.600-3/2/1 (14)" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-srati-600 focus:border-srati-600 outline-none">
+                            </div>
+
+                            <!-- Kepada -->
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">Kepada (Pentadbir Penerima) <span class="text-red-500">*</span></label>
+                                <input type="text" id="f_kepada" oninput="syncFormState()" value="Guru Besar, SR Agama Tarbiyyah Islamiyah (SRATI)" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-srati-600 focus:border-srati-600 outline-none">
+                            </div>
+
+                            <!-- Daripada (Nama Pegawai) -->
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">Daripada (Nama Guru Hadir) <span class="text-red-500">*</span></label>
+                                <input type="text" id="f_namaGuru" oninput="syncFormState()" placeholder="Contoh: Ustaz Ahmad Firdaus bin Zulkifli" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-srati-600 focus:border-srati-600 outline-none">
+                            </div>
+
+                            <!-- Jawatan & Gred -->
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">Jawatan & Gred <span class="text-red-500">*</span></label>
+                                <input type="text" id="f_jawatan" oninput="syncFormState()" placeholder="Contoh: Guru Akademik / Ketua Panitia (DG41)" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-srati-600 focus:border-srati-600 outline-none">
+                            </div>
+
+                            <!-- Tajuk Perkara -->
+                            <div class="sm:col-span-2">
+                                <label class="block text-xs font-bold text-slate-700 mb-1">Tajuk Mesyuarat / Taklimat / Bengkel / Kursus <span class="text-red-500">*</span></label>
+                                <input type="text" id="f_tajuk" oninput="syncFormState()" placeholder="Contoh: Taklimat Penyelarasan Pentaksiran Bilik Darjah (PBD) & Kurikulum Persekolahan 2027" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm font-medium focus:ring-2 focus:ring-srati-600 focus:border-srati-600 outline-none">
+                            </div>
+
+                            <!-- Kategori Program -->
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">Kategori Program <span class="text-red-500">*</span></label>
+                                <select id="f_kategori" onchange="syncFormState()" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm bg-white focus:ring-2 focus:ring-srati-600 focus:border-srati-600 outline-none">
+                                    <option value="Taklimat">Taklimat</option>
+                                    <option value="Bengkel">Bengkel</option>
+                                    <option value="Kursus / LADAP">Kursus / LADAP</option>
+                                    <option value="Mesyuarat Penyelarasan">Mesyuarat Penyelarasan</option>
+                                    <option value="Seminar / Wacana">Seminar / Wacana</option>
+                                    <option value="Pemantauan / Naziran">Pemantauan / Naziran</option>
+                                </select>
+                            </div>
+
+                            <!-- Anjuran -->
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">Anjuran (KPM / JPN / PPD / Bahagian) <span class="text-red-500">*</span></label>
+                                <input type="text" id="f_anjuran" oninput="syncFormState()" placeholder="Contoh: Bahagian Pendidikan Islam (BPI), KPM / PPD" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-srati-600 focus:border-srati-600 outline-none">
+                            </div>
+
+                            <!-- Tarikh -->
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">Tarikh Program <span class="text-red-500">*</span></label>
+                                <input type="date" id="f_tarikh" oninput="syncFormState()" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-srati-600 focus:border-srati-600 outline-none">
+                            </div>
+
+                            <!-- Masa -->
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">Masa <span class="text-red-500">*</span></label>
+                                <input type="text" id="f_masa" oninput="syncFormState()" placeholder="Contoh: 8.30 pagi – 4.30 petang" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-srati-600 focus:border-srati-600 outline-none">
+                            </div>
+
+                            <!-- Tempat -->
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">Tempat / Medium Pelaksanaan <span class="text-red-500">*</span></label>
+                                <input type="text" id="f_tempat" oninput="syncFormState()" placeholder="Contoh: Dewan Utama PPD / Secara Dalam Talian (Google Meet)" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-srati-600 focus:border-srati-600 outline-none">
+                            </div>
+
+                            <!-- Pengerusi / Penceramah -->
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">Pengerusi / Penceramah Utama</label>
+                                <input type="text" id="f_pengerusi" oninput="syncFormState()" placeholder="Contoh: Tuan Haji Mohd Nasir bin Ali (Ketua Penolong Pengarah)" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-srati-600 focus:border-srati-600 outline-none">
+                            </div>
+
+                            <!-- Turut Hadir -->
+                            <div class="sm:col-span-2">
+                                <label class="block text-xs font-bold text-slate-700 mb-1">Turut Hadir (Guru SRATI lain yang turut serta, jika ada)</label>
+                                <input type="text" id="f_turutHadir" oninput="syncFormState()" placeholder="Contoh: Tiada / Ustazah Siti Aminah binti Rahman (Penyelaras Tahun 1)" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-srati-600 focus:border-srati-600 outline-none">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- BAHAGIAN B: ISI PENTING / CATATAN MESYUARAT -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                        <div class="bg-srati-800 text-white px-5 py-3.5 flex items-center justify-between">
+                            <div class="flex items-center gap-2.5">
+                                <span class="w-6 h-6 rounded-lg bg-gold-500 text-srati-950 font-extrabold text-xs flex items-center justify-center">B</span>
+                                <h3 class="font-bold text-sm sm:text-base">Isi Penting / Catatan Perbincangan & Keputusan</h3>
+                            </div>
+                            <button type="button" onclick="addAgendaItem()" class="bg-white/15 hover:bg-white/25 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition flex items-center gap-1.5">
+                                <i class="fa-solid fa-plus"></i>
+                                <span>Tambah Perkara</span>
+                            </button>
+                        </div>
+
+                        <div class="p-5">
+                            <p class="text-xs text-slate-500 mb-4">
+                                Senaraikan ketetapan dasar, arahan baharu KPM/JPN/PPD, tarikh penting, dan keputusan utama yang perlu dimaklumkan kepada pihak pentadbir SRATI.
+                            </p>
+                            <div id="agendaListContainer" class="space-y-4">
+                                <!-- Item Agenda akan dijana oleh JS -->
+                            </div>
+                            <button type="button" onclick="addAgendaItem()" class="mt-4 w-full py-2.5 rounded-xl border-2 border-dashed border-srati-300 text-srati-700 hover:bg-srati-50 text-xs font-bold transition flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-circle-plus"></i>
+                                <span>Tambah Butiran Isi Penting Seterusnya</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- BAHAGIAN C: TINDAKAN SUSULAN PERINGKAT SEKOLAH -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                        <div class="bg-srati-800 text-white px-5 py-3.5 flex items-center justify-between">
+                            <div class="flex items-center gap-2.5">
+                                <span class="w-6 h-6 rounded-lg bg-gold-500 text-srati-950 font-extrabold text-xs flex items-center justify-center">C</span>
+                                <h3 class="font-bold text-sm sm:text-base">Tindakan Susulan Peringkat Sekolah (SRATI)</h3>
+                            </div>
+                            <button type="button" onclick="addActionItem()" class="bg-white/15 hover:bg-white/25 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition flex items-center gap-1.5">
+                                <i class="fa-solid fa-plus"></i>
+                                <span>Tambah Tindakan</span>
+                            </button>
+                        </div>
+
+                        <div class="p-5">
+                            <p class="text-xs text-slate-500 mb-4">
+                                Nyatakan tindakan segera yang perlu diambil oleh pihak sekolah, panitia, penyelaras unit atau guru selepas taklimat/bengkel ini.
+                            </p>
+                            <div id="actionListContainer" class="space-y-3">
+                                <!-- Item Tindakan akan dijana oleh JS -->
+                            </div>
+                            <button type="button" onclick="addActionItem()" class="mt-4 w-full py-2.5 rounded-xl border-2 border-dashed border-amber-300 text-amber-800 hover:bg-amber-50 text-xs font-bold transition flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-list-check"></i>
+                                <span>Tambah Rekod Tindakan Susulan</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- BAHAGIAN D & E: BAHAN EDARAN & PENGESAHAN -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                        <div class="bg-srati-800 text-white px-5 py-3.5 flex items-center gap-2.5">
+                            <span class="w-6 h-6 rounded-lg bg-gold-500 text-srati-950 font-extrabold text-xs flex items-center justify-center">D</span>
+                            <h3 class="font-bold text-sm sm:text-base">Bahan Edaran, Pautan & Pengesahan Rasmi</h3>
+                        </div>
+
+                        <div class="p-5 space-y-4">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">Bahan Edaran / Pautan Digital / Pekeliling Rujukan</label>
+                                <textarea id="f_bahanEdaran" rows="2" oninput="syncFormState()" placeholder="Contoh: 1. Slaid Pembentangan PBD (Pautan Google Drive)&#10;2. Surat Siaran KPM Bil. 4 Tahun 2026" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-srati-600 focus:border-srati-600 outline-none"></textarea>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-slate-100">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-700 mb-1">Tarikh Laporan Disediakan <span class="text-red-500">*</span></label>
+                                    <input type="date" id="f_tarikhSedia" oninput="syncFormState()" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-srati-600 focus:border-srati-600 outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-700 mb-1">Pegawai Pengesah (Guru Besar / Penolong Kanan)</label>
+                                    <input type="text" id="f_pengesah" oninput="syncFormState()" value="Guru Besar, SR Agama Tarbiyyah Islamiyah (SRATI)" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-srati-600 focus:border-srati-600 outline-none">
+                                </div>
+                                <div class="sm:col-span-2">
+                                    <label class="block text-xs font-bold text-slate-700 mb-1">Ulasan / Catatan Pentadbir (Pilihan - boleh diisi selepas semakan)</label>
+                                    <input type="text" id="f_ulasanPentadbir" oninput="syncFormState()" placeholder="Contoh: Dimaklumkan. Sila bentangkan dalam Mesyuarat Guru bil. 3 akan datang." class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-srati-600 focus:border-srati-600 outline-none">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- BAR BUTANG TINDAKAN BAWAH -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 flex flex-wrap items-center justify-between gap-3">
+                        <div class="flex flex-wrap items-center gap-2">
+                            <button type="button" onclick="saveCurrentToCloud()" class="px-5 py-3 rounded-xl bg-srati-700 hover:bg-srati-800 text-white font-bold text-xs sm:text-sm shadow transition flex items-center gap-2">
+                                <i class="fa-solid fa-cloud-arrow-up"></i>
+                                <span>Simpan Rekod ke Awan</span>
+                            </button>
+                            <button type="button" onclick="switchTab('preview')" class="px-4 py-3 rounded-xl bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs sm:text-sm shadow transition flex items-center gap-2">
+                                <i class="fa-solid fa-eye"></i>
+                                <span>Pratonton & Cetak A4</span>
+                            </button>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <button type="button" onclick="downloadCurrentWord()" class="px-3.5 py-2.5 rounded-xl border border-blue-200 bg-blue-50 hover:bg-blue-100 text-blue-800 font-semibold text-xs transition flex items-center gap-1.5">
+                                <i class="fa-solid fa-file-word"></i>
+                                <span>Muat Turun Word</span>
+                            </button>
+                            <button type="button" onclick="downloadCurrentJSON()" class="px-3.5 py-2.5 rounded-xl border border-amber-200 bg-amber-50 hover:bg-amber-100 text-amber-800 font-semibold text-xs transition flex items-center gap-1.5">
+                                <i class="fa-solid fa-download"></i>
+                                <span>Simpan JSON</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- LAJUR KANAN (4/12): PEMBANTU PINTAR GURU KPM -->
+                <div class="lg:col-span-4 space-y-6">
+                    
+                    <!-- Kad Kelengkapan Minit Curai -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5">
+                        <div class="flex items-center justify-between mb-2">
+                            <h4 class="font-bold text-sm text-slate-800 flex items-center gap-2">
+                                <i class="fa-solid fa-chart-pie text-srati-600"></i>
+                                <span>Tahap Kelengkapan Minit</span>
+                            </h4>
+                            <span id="completionPercent" class="text-sm font-extrabold text-srati-700">0%</span>
+                        </div>
+                        <div class="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden mb-3">
+                            <div id="completionBar" class="bg-gradient-to-r from-srati-600 to-gold-500 h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
+                        </div>
+                        <p id="completionHint" class="text-xs text-slate-500">
+                            Lengkapkan maklumat asas, sekurang-kurangnya 1 isi penting, dan tindakan susulan.
+                        </p>
+                    </div>
+
+                    <!-- Bank Frasa Rasmi KPM (1-Klik Masukkan) -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5">
+                        <h4 class="font-bold text-sm text-slate-800 flex items-center gap-2 mb-1">
+                            <i class="fa-solid fa-sparkles text-gold-500"></i>
+                            <span>Bank Frasa Rasmi KPM</span>
+                        </h4>
+                        <p class="text-xs text-slate-500 mb-3">
+                            Klik mana-mana frasa pentadbiran di bawah untuk menambah terus ke dalam <strong>Isi Penting</strong>:
+                        </p>
+                        <div class="flex flex-wrap gap-1.5" id="phraseBankContainer">
+                            <!-- Dijana oleh JS -->
+                        </div>
+                    </div>
+
+                    <!-- Penjana Ringkasan WhatsApp / Telegram Grup Sekolah -->
+                    <div class="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl shadow-sm border border-emerald-200 p-5">
+                        <div class="flex items-center justify-between mb-2">
+                            <h4 class="font-bold text-sm text-emerald-950 flex items-center gap-2">
+                                <i class="fa-brands fa-whatsapp text-emerald-600 text-base"></i>
+                                <span>Hebahan Pantas WhatsApp</span>
+                            </h4>
+                            <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-emerald-200 text-emerald-900">Bonus Guru</span>
+                        </div>
+                        <p class="text-xs text-emerald-800 mb-3">
+                            Salin ringkasan terus untuk dikongsi dalam grup rasmi Guru SRATI:
+                        </p>
+                        <div id="whatsappPreviewBox" class="bg-white/90 rounded-xl p-3 text-xs text-slate-700 font-mono whitespace-pre-line border border-emerald-200/80 max-h-48 overflow-y-auto mb-3 leading-relaxed">
+                            <!-- Dijana secara automatik -->
+                        </div>
+                        <button type="button" onclick="copyWhatsAppSummary()" class="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-sm transition flex items-center justify-center gap-2">
+                            <i class="fa-regular fa-copy"></i>
+                            <span>Salin Teks WhatsApp / Telegram</span>
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 2: PRATONTON RASMI A4 & CETAK ==================== -->
+        <section id="view-preview" class="hidden fade-in">
+            <!-- Bar Kawalan Pratonton (Disembunyikan semasa mencetak) -->
+            <div class="no-print bg-white rounded-2xl shadow-sm border border-slate-200 p-4 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                    <h2 class="text-base font-bold text-slate-800 flex items-center gap-2">
+                        <i class="fa-solid fa-file-shield text-srati-700"></i>
+                        <span>Pratonton Dokumen Rasmi Minit Curai (Saiz A4)</span>
+                    </h2>
+                    <p class="text-xs text-slate-500">Dokumen ini diformatkan mengikut susun atur rasmi KPM untuk difailkan atau ditandatangani Guru Besar.</p>
+                </div>
+                <div class="flex flex-wrap items-center gap-2">
+                    <button type="button" onclick="switchTab('editor')" class="px-3.5 py-2.5 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-50 font-semibold text-xs transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-arrow-left"></i>
+                        <span>Kembali Edit</span>
+                    </button>
+                    <button type="button" onclick="downloadCurrentWord()" class="px-3.5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-sm transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-file-word"></i>
+                        <span>Muat Turun Word (.doc)</span>
+                    </button>
+                    <button type="button" onclick="downloadCurrentJSON()" class="px-3.5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs shadow-sm transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-file-code"></i>
+                        <span>Muat Turun JSON</span>
+                    </button>
+                    <button type="button" onclick="triggerPrintPDF()" class="px-4 py-2.5 rounded-xl bg-srati-700 hover:bg-srati-800 text-white font-bold text-xs shadow transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-print"></i>
+                        <span>Cetak / Simpan PDF</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Kertas A4 Rasmi (Akan dicetak penuh) -->
+            <div class="print-only-container overflow-x-auto pb-8">
+                <div id="officialA4Document" class="a4-paper">
+                    <!-- Kandungan A4 dijana oleh JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 3: ARKIB REKOD AWAN ==================== -->
+        <section id="view-archive" class="no-print hidden fade-in">
+            <!-- Kad Statistik Ringkas -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+                <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-srati-50 text-srati-700 flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-folder-open"></i>
+                    </div>
+                    <div>
+                        <div class="text-xs font-semibold text-slate-500">Jumlah Rekod Awan</div>
+                        <div id="statTotalRecords" class="text-2xl font-extrabold text-slate-800">0</div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-clock-rotate-left"></i>
+                    </div>
+                    <div>
+                        <div class="text-xs font-semibold text-slate-500">Tindakan Masih Dalam Proses</div>
+                        <div id="statPendingActions" class="text-2xl font-extrabold text-slate-800">0</div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-user-check"></i>
+                    </div>
+                    <div>
+                        <div class="text-xs font-semibold text-slate-500">Rekod Sesi Anda</div>
+                        <div id="statMyRecords" class="text-2xl font-extrabold text-slate-800">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bar Carian & Penapis -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 mb-6">
+                <div class="flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between">
+                    <div class="relative flex-1">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                        <input type="text" id="archiveSearchInput" oninput="renderArchiveList()" placeholder="Cari tajuk taklimat, nama guru, anjuran atau rujukan..." class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-srati-600 outline-none">
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <select id="archiveCategoryFilter" onchange="renderArchiveList()" class="rounded-xl border border-slate-300 px-3 py-2.5 text-xs font-semibold bg-white text-slate-700 outline-none">
+                            <option value="ALL">Semua Kategori</option>
+                            <option value="Taklimat">Taklimat</option>
+                            <option value="Bengkel">Bengkel</option>
+                            <option value="Kursus / LADAP">Kursus / LADAP</option>
+                            <option value="Mesyuarat Penyelarasan">Mesyuarat Penyelarasan</option>
+                            <option value="Seminar / Wacana">Seminar / Wacana</option>
+                            <option value="Pemantauan / Naziran">Pemantauan / Naziran</option>
+                        </select>
+                        <select id="archiveOwnerFilter" onchange="renderArchiveList()" class="rounded-xl border border-slate-300 px-3 py-2.5 text-xs font-semibold bg-white text-slate-700 outline-none">
+                            <option value="ALL">Semua Rekod Sekolah</option>
+                            <option value="MINE">Rekod Saya Sahaja</option>
+                        </select>
+                        <button type="button" onclick="downloadAllRecordsJSON()" class="px-3.5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold flex items-center gap-1.5 transition">
+                            <i class="fa-solid fa-file-export"></i>
+                            <span>Eksport Semua JSON</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Senarai Rekod Minit Curai -->
+            <div id="archiveRecordsContainer" class="space-y-4">
+                <!-- Kad Rekod dijana oleh JS -->
+            </div>
+        </section>
+
+        <!-- ==================== TAB 4: SISTEM DATA JSON & PANDUAN ==================== -->
+        <section id="view-json" class="no-print hidden fade-in">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                
+                <!-- Pengurusan Sandaran JSON (Download & Upload) -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 space-y-6">
+                    <div>
+                        <span class="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-amber-100 text-amber-800">Sistem Mudah Alih Data</span>
+                        <h3 class="text-lg font-bold text-slate-800 mt-2">Muat Turun & Muat Naik Fail Data (.JSON)</h3>
+                        <p class="text-xs text-slate-600 mt-1 leading-relaxed">
+                            Simpan salinan pendua luar talian ke dalam komputer atau pemacu USB anda, atau muat naik semula fail <code>.json</code> Minit Curai untuk disunting atau disimpan ke awan.
+                        </p>
+                    </div>
+
+                    <!-- Bahagian Muat Turun JSON -->
+                    <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
+                        <h4 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+                            <i class="fa-solid fa-download text-srati-700"></i>
+                            <span>1. Muat Turun Fail JSON</span>
+                        </h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                            <button type="button" onclick="downloadCurrentJSON()" class="p-3 rounded-xl bg-white hover:bg-srati-50 border border-slate-300 text-left transition group">
+                                <div class="text-xs font-bold text-slate-800 group-hover:text-srati-800">Minit Semasa Sahaja</div>
+                                <div class="text-[11px] text-slate-500 mt-0.5">Muat turun draf/rekod aktif dalam borang</div>
+                            </button>
+                            <button type="button" onclick="downloadAllRecordsJSON()" class="p-3 rounded-xl bg-white hover:bg-amber-50 border border-slate-300 text-left transition group">
+                                <div class="text-xs font-bold text-slate-800 group-hover:text-amber-800">Semua Arkib Rekod</div>
+                                <div class="text-[11px] text-slate-500 mt-0.5">Sandaran penuh semua Minit Curai</div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Bahagian Muat Naik JSON -->
+                    <div class="p-4 rounded-xl bg-emerald-50/60 border-2 border-dashed border-srati-300 space-y-3">
+                        <h4 class="text-sm font-bold text-srati-900 flex items-center gap-2">
+                            <i class="fa-solid fa-upload text-srati-700"></i>
+                            <span>2. Muat Naik / Pulihkan Fail JSON</span>
+                        </h4>
+                        <p class="text-xs text-slate-600">
+                            Pilih fail <code>.json</code> yang pernah dimuat turun dari sistem ini (menyokong fail tunggal atau fail arkib pukal).
+                        </p>
+                        <label class="flex flex-col items-center justify-center p-6 bg-white rounded-xl border border-slate-200 cursor-pointer hover:border-srati-600 hover:bg-srati-50/40 transition">
+                            <i class="fa-solid fa-cloud-arrow-up text-3xl text-srati-600 mb-2"></i>
+                            <span class="text-xs font-bold text-slate-800">Klik untuk pilih fail .JSON dari peranti anda</span>
+                            <span class="text-[11px] text-slate-400 mt-1">Format diterima: .json</span>
+                            <input type="file" id="jsonFileInput" accept=".json,application/json" onchange="handleJSONUpload(event)" class="hidden">
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Panduan Piawaian Minit Curai KPM -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 space-y-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-srati-800 text-gold-400 flex items-center justify-center text-lg">
+                            <i class="fa-solid fa-book-open-reader"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-base font-bold text-slate-800">Garis Panduan Penyediaan Minit Curai KPM</h3>
+                            <p class="text-xs text-slate-500">Rujukan pantas guru SRATI selepas menghadiri urusan rasmi luar</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3 text-xs text-slate-700 leading-relaxed">
+                        <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
+                            <strong class="text-srati-900 block mb-1">1. Tempoh Penghantaran (Piawaian KPM)</strong>
+                            Minit Curai hendaklah disediakan dan diserahkan kepada <strong>Guru Besar</strong> dalam tempoh selewat-lewatnya <strong>3 hingga 7 hari bekerja</strong> selepas guru menghadiri taklimat, bengkel atau kursus rasmi.
+                        </div>
+                        <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
+                            <strong class="text-srati-900 block mb-1">2. Fokus Penulisan Isi Penting</strong>
+                            Catatkan <strong>keputusan dasar, arahan baharu, garis masa pelaksanaan (deadline)</strong> dan implikasi kewangan atau kurikulum kepada SRATI secara ringkas, padat dan tepat (elakkan penulisan berbentuk karangan panjang).
+                        </div>
+                        <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
+                            <strong class="text-srati-900 block mb-1">3. Tindakan Susulan Peringkat Sekolah</strong>
+                            Pastikan setiap keputusan yang memerlukan tindakan sekolah dinyatakan dengan jelas unit/panitia bertanggungjawab (contoh: <em>Setiausaha Kurikulum, Ketua Panitia Pendidikan Islam, Penyelaras PBD</em>).
+                        </div>
+                        <div class="p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-950">
+                            <strong class="block mb-1"><i class="fa-solid fa-lightbulb text-amber-600 mr-1"></i> Tip Penggunaan Sistem Ini:</strong>
+                            Gunakan butang <strong>Cetak / Simpan PDF</strong> pada tab Pratonton Rasmi A4 untuk mendapatkan salinan rasmi bertandatangan, atau eksport ke <strong>Word (.doc)</strong> sekiranya perlu dilampirkan bersama surat iringan rasmi sekolah.
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="no-print bg-white border-t border-slate-200 py-4 mt-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-500">
+            <div>
+                &copy; <span id="footerYear">2026</span> <strong>SR Agama Tarbiyyah Islamiyah (SRATI)</strong>. Sistem e-Minit Curai Digital Piawaian KPM.
+            </div>
+            <div class="flex items-center gap-3">
+                <span>Simpanan Awan Masa Nyata</span>
+                <span>•</span>
+                <span>Format Rasmi A4</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ==================== MODAL PENGESAHAN TERSUAI (GANTI CONFIRM/ALERT) ==================== -->
+    <div id="customModalBackdrop" class="no-print fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 fade-in">
+            <div class="flex items-start gap-3.5">
+                <div id="modalIconContainer" class="w-10 h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-lg shrink-0">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+                <div class="flex-1">
+                    <h3 id="modalTitle" class="text-base font-bold text-slate-900">Pengesahan Tindakan</h3>
+                    <p id="modalMessage" class="text-xs sm:text-sm text-slate-600 mt-1.5 leading-relaxed">Adakah anda pasti?</p>
+                </div>
+            </div>
+            <div id="modalButtonsContainer" class="mt-6 flex items-center justify-end gap-2.5">
+                <button type="button" onclick="closeCustomModal()" class="px-4 py-2 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-50 text-xs font-bold transition">
+                    Batal
+                </button>
+                <button type="button" id="modalConfirmBtn" class="px-4 py-2 rounded-xl bg-srati-700 hover:bg-srati-800 text-white text-xs font-bold shadow transition">
+                    Teruskan
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== NOTIFIKASI TOAST ==================== -->
+    <div id="toastContainer" class="no-print fixed bottom-5 right-5 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none px-4 sm:px-0"></div>
+
+    <!-- ==================== SKRIP UTAMA & INTEGRASI FIREBASE ==================== -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Konfigurasi Persekitaran Awan
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'srati-minit-curai-default';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+        let app = null;
+        let db = null;
+        let auth = null;
+        let currentUser = null;
+        let isCloudReady = false;
+        let unsubscribeSnapshot = null;
+
+        // Koleksi Arkib Sekolah SRATI (Laluan Rasmi Mengikut Piawaian)
+        const COLLECTION_NAME = 'minit_curai_srati';
+
+        // Keadaan Data Aplikasi (In-Memory State)
+        let allRecords = [];
+        let activeTab = 'editor';
+
+        // Bank Frasa Rasmi KPM untuk Guru
+        const KPM_PHRASE_BANK = [
+            "Taklimat telah dipengerusikan oleh pihak KPM/JPN/PPD bagi menyelaras pelaksanaan dasar terkini di peringkat sekolah.",
+            "Semua sekolah diminta mengemas kini data dan pelaporan menerusi sistem dalam talian KPM sebelum tarikh akhir yang ditetapkan.",
+            "Penyelarasan Pentaksiran Bilik Darjah (PBD) perlu dilaksanakan oleh Ketua Panitia bersama semua guru mata pelajaran.",
+            "Pihak sekolah perlu mengadakan taklimat dalaman (In-House Training / LADAP) kepada semua guru berkaitan.",
+            "Bahan edaran digital dan garis panduan rasmi boleh diakses melalui pelantar DELIMa KPM.",
+            "Pemantauan berkala akan dijalankan oleh pegawai PPD/JPN bagi memastikan pematuhan standard kualiti SKPM."
+        ];
+
+        // Draf Minit Curai Semasa
+        let currentMinit = createEmptyMinit();
+
+        function createEmptyMinit() {
+            const today = new Date().toISOString().split('T')[0];
+            return {
+                id: null,
+                rujukan: '',
+                kepada: 'Guru Besar, SR Agama Tarbiyyah Islamiyah (SRATI)',
+                namaGuru: '',
+                jawatan: '',
+                tajuk: '',
+                kategori: 'Taklimat',
+                anjuran: '',
+                tarikh: today,
+                masa: '8.30 pagi – 1.00 tengah hari',
+                tempat: '',
+                pengerusi: '',
+                turutHadir: 'Tiada',
+                agendaItems: [
+                    { id: crypto.randomUUID(), tajukPerkara: 'Ucapan Aluan & Tujuan Taklimat', huraian: '' }
+                ],
+                actionItems: [
+                    { id: crypto.randomUUID(), perkara: '', pelaksana: 'Ketua Panitia / Penyelaras Unit', tarikhAkhir: '', status: 'Dalam Proses' }
+                ],
+                bahanEdaran: '',
+                tarikhSedia: today,
+                pengesah: 'Guru Besar, SR Agama Tarbiyyah Islamiyah (SRATI)',
+                ulasanPentadbir: '',
+                authorUid: '',
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+            };
+        }
+
+        // ==================== INISIALISASI FIREBASE & AUTH ====================
+        async function initCloudSystem() {
+            const statusDot = document.getElementById('cloudStatusDot');
+            const statusText = document.getElementById('cloudStatusText');
+            const userDisplay = document.getElementById('userIdDisplay');
+
+            if (!firebaseConfig) {
+                statusDot.className = 'w-2.5 h-2.5 rounded-full bg-amber-400';
+                statusText.textContent = 'Mod Sesi Tempatan';
+                userDisplay.textContent = 'ID: Sesi-Lokal';
+                return;
+            }
+
+            try {
+                app = initializeApp(firebaseConfig);
+                auth = getAuth(app);
+                db = getFirestore(app);
+
+                // Langkah Wajib: Autentikasi dahulu sebelum sebarang operasi Firestore
+                if (initialAuthToken) {
+                    await signInWithCustomToken(auth, initialAuthToken);
+                } else {
+                    await signInAnonymously(auth);
+                }
+
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        currentUser = user;
+                        isCloudReady = true;
+                        statusDot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399]';
+                        statusText.textContent = 'Awan Aktif • Disambungkan';
+                        userDisplay.textContent = `ID: ${user.uid}`;
+                        
+                        // Mula mendengar perubahan rekod awan
+                        subscribeToCloudRecords();
+                    } else {
+                        isCloudReady = false;
+                        statusDot.className = 'w-2.5 h-2.5 rounded-full bg-red-400';
+                        statusText.textContent = 'Terputus Sambungan';
+                    }
+                });
+            } catch (error) {
+                console.error("Ralat inisialisasi awan:", error);
+                statusDot.className = 'w-2.5 h-2.5 rounded-full bg-red-400';
+                statusText.textContent = 'Ralat Sambungan Awan';
+                showToast('Gagal menyambung ke pelayan awan. Anda masih boleh menggunakan muat turun JSON.', 'error');
+            }
+        }
+
+        // Langganan Masa Nyata Rekod Minit Curai dari Firestore
+        function subscribeToCloudRecords() {
+            if (!db || !currentUser) return;
+
+            if (unsubscribeSnapshot) {
+                unsubscribeSnapshot();
+            }
+
+            // Laluan Wajib: /artifacts/{appId}/public/data/minit_curai_srati
+            const colRef = collection(db, 'artifacts', appId, 'public', 'data', COLLECTION_NAME);
+
+            unsubscribeSnapshot = onSnapshot(
+                colRef,
+                (snapshot) => {
+                    const loaded = [];
+                    snapshot.forEach((docSnap) => {
+                        const data = docSnap.data();
+                        // Nyahserialisasi array sekiranya disimpan sebagai string atau objek
+                        let parsedAgenda = [];
+                        let parsedActions = [];
+                        try {
+                            parsedAgenda = typeof data.agendaItems === 'string' ? JSON.parse(data.agendaItems) : (data.agendaItems || []);
+                            parsedActions = typeof data.actionItems === 'string' ? JSON.parse(data.actionItems) : (data.actionItems || []);
+                        } catch (e) {
+                            parsedAgenda = [];
+                            parsedActions = [];
+                        }
+
+                        loaded.push({
+                            ...data,
+                            id: docSnap.id,
+                            agendaItems: parsedAgenda,
+                            actionItems: parsedActions
+                        });
+                    });
+
+                    // Isih dalam memori JavaScript (terkini di atas)
+                    loaded.sort((a, b) => new Date(b.updatedAt || b.createdAt || 0) - new Date(a.updatedAt || a.createdAt || 0));
+                    allRecords = loaded;
+
+                    updateArchiveStats();
+                    renderArchiveList();
+                },
+                (error) => {
+                    console.error("Ralat membaca rekod awan:", error);
+                    showToast('Ralat menyegerak rekod dari awan.', 'error');
+                }
+            );
+        }
+
+        // ==================== SIMPAN KE AWAN (FIRESTORE) ====================
+        window.saveCurrentToCloud = async function() {
+            syncFormState();
+
+            // Pengesahan medan wajib
+            if (!currentMinit.namaGuru.trim() || !currentMinit.tajuk.trim()) {
+                showToast('Sila lengkapkan sekurang-kurangnya Nama Guru dan Tajuk Program sebelum menyimpan.', 'warning');
+                return;
+            }
+
+            const nowIso = new Date().toISOString();
+            const recordId = currentMinit.id || `MC_${Date.now()}_${Math.random().toString(36).substring(2, 7).toUpperCase()}`;
+            currentMinit.id = recordId;
+            currentMinit.updatedAt = nowIso;
+            if (!currentMinit.createdAt) currentMinit.createdAt = nowIso;
+            if (currentUser) currentMinit.authorUid = currentUser.uid;
+
+            // Sediakan payload bersih untuk Firestore
+            const payload = {
+                ...currentMinit,
+                agendaItems: JSON.stringify(currentMinit.agendaItems),
+                actionItems: JSON.stringify(currentMinit.actionItems)
+            };
+
+            if (isCloudReady && db && currentUser) {
+                try {
+                    const docRef = doc(db, 'artifacts', appId, 'public', 'data', COLLECTION_NAME, recordId);
+                    await setDoc(docRef, payload);
+                    
+                    updateEditorBanner();
+                    showToast('Minit Curai berjaya disimpan ke simpanan awan SRATI!', 'success');
+                } catch (error) {
+                    console.error("Ralat simpan ke awan:", error);
+                    showToast('Gagal menyimpan ke awan. Sila semak sambungan internet anda.', 'error');
+                }
+            } else {
+                // Simpan ke memori sementara jika mod luar talian
+                const existingIdx = allRecords.findIndex(r => r.id === recordId);
+                if (existingIdx > -1) {
+                    allRecords[existingIdx] = { ...currentMinit };
+                } else {
+                    allRecords.unshift({ ...currentMinit });
+                }
+                updateArchiveStats();
+                renderArchiveList();
+                updateEditorBanner();
+                showToast('Disimpan dalam memori sesi (Sila muat turun JSON untuk sandaran kekal).', 'info');
+            }
+        };
+
+        // ==================== PENGURUSAN BORANG & KEADAAN ====================
+        function populateFormFromState() {
+            document.getElementById('f_rujukan').value = currentMinit.rujukan || '';
+            document.getElementById('f_kepada').value = currentMinit.kepada || 'Guru Besar, SR Agama Tarbiyyah Islamiyah (SRATI)';
+            document.getElementById('f_namaGuru').value = currentMinit.namaGuru || '';
+            document.getElementById('f_jawatan').value = currentMinit.jawatan || '';
+            document.getElementById('f_tajuk').value = currentMinit.tajuk || '';
+            document.getElementById('f_kategori').value = currentMinit.kategori || 'Taklimat';
+            document.getElementById('f_anjuran').value = currentMinit.anjuran || '';
+            document.getElementById('f_tarikh').value = currentMinit.tarikh || '';
+            document.getElementById('f_masa').value = currentMinit.masa || '';
+            document.getElementById('f_tempat').value = currentMinit.tempat || '';
+            document.getElementById('f_pengerusi').value = currentMinit.pengerusi || '';
+            document.getElementById('f_turutHadir').value = currentMinit.turutHadir || '';
+            document.getElementById('f_bahanEdaran').value = currentMinit.bahanEdaran || '';
+            document.getElementById('f_tarikhSedia').value = currentMinit.tarikhSedia || '';
+            document.getElementById('f_pengesah').value = currentMinit.pengesah || 'Guru Besar, SR Agama Tarbiyyah Islamiyah (SRATI)';
+            document.getElementById('f_ulasanPentadbir').value = currentMinit.ulasanPentadbir || '';
+
+            renderAgendaList();
+            renderActionList();
+            updateEditorBanner();
+            updateCompletionMeter();
+            updateWhatsAppPreview();
+            renderOfficialA4();
+        }
+
+        window.syncFormState = function() {
+            currentMinit.rujukan = document.getElementById('f_rujukan').value;
+            currentMinit.kepada = document.getElementById('f_kepada').value;
+            currentMinit.namaGuru = document.getElementById('f_namaGuru').value;
+            currentMinit.jawatan = document.getElementById('f_jawatan').value;
+            currentMinit.tajuk = document.getElementById('f_tajuk').value;
+            currentMinit.kategori = document.getElementById('f_kategori').value;
+            currentMinit.anjuran = document.getElementById('f_anjuran').value;
+            currentMinit.tarikh = document.getElementById('f_tarikh').value;
+            currentMinit.masa = document.getElementById('f_masa').value;
+            currentMinit.tempat = document.getElementById('f_tempat').value;
+            currentMinit.pengerusi = document.getElementById('f_pengerusi').value;
+            currentMinit.turutHadir = document.getElementById('f_turutHadir').value;
+            currentMinit.bahanEdaran = document.getElementById('f_bahanEdaran').value;
+            currentMinit.tarikhSedia = document.getElementById('f_tarikhSedia').value;
+            currentMinit.pengesah = document.getElementById('f_pengesah').value;
+            currentMinit.ulasanPentadbir = document.getElementById('f_ulasanPentadbir').value;
+
+            updateEditorBanner();
+            updateCompletionMeter();
+            updateWhatsAppPreview();
+            if (activeTab === 'preview') {
+                renderOfficialA4();
+            }
+        };
+
+        function updateEditorBanner() {
+            const badge = document.getElementById('editingModeBadge');
+            const savedLabel = document.getElementById('lastSavedLabel');
+            const titleEl = document.getElementById('editorBannerTitle');
+
+            if (currentMinit.id) {
+                badge.textContent = 'Rekod Disimpan';
+                badge.className = 'text-xs font-bold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800';
+                savedLabel.textContent = `ID: ${currentMinit.id} • Kemaskini: ${formatDateTimeMY(currentMinit.updatedAt)}`;
+            } else {
+                badge.textContent = 'Draf Baharu';
+                badge.className = 'text-xs font-bold px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-800';
+                savedLabel.textContent = 'Belum disimpan ke awan';
+            }
+
+            titleEl.textContent = currentMinit.tajuk.trim() || 'Sila lengkapkan maklumat taklimat, bengkel atau kursus di bawah';
+        }
+
+        // ==================== SENARAI ISI PENTING (AGENDA) ====================
+        function renderAgendaList() {
+            const container = document.getElementById('agendaListContainer');
+            container.innerHTML = '';
+
+            currentMinit.agendaItems.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = 'p-4 rounded-xl bg-slate-50 border border-slate-200 relative group transition hover:border-srati-300';
+                card.innerHTML = `
+                    <div class="flex items-center justify-between gap-2 mb-2.5">
+                        <span class="text-xs font-extrabold text-srati-800 bg-srati-100 px-2.5 py-1 rounded-lg">
+                            Perkara ${index + 1}
+                        </span>
+                        ${currentMinit.agendaItems.length > 1 ? `
+                            <button type="button" onclick="removeAgendaItem('${item.id}')" class="text-xs text-red-500 hover:text-red-700 font-semibold px-2 py-1 rounded hover:bg-red-50 transition">
+                                <i class="fa-solid fa-trash-can mr-1"></i>Padam
+                            </button>
+                        ` : ''}
+                    </div>
+                    <div class="space-y-2.5">
+                        <input type="text" value="${escapeHtml(item.tajukPerkara)}" oninput="updateAgendaField('${item.id}', 'tajukPerkara', this.value)" placeholder="Tajuk Kecil / Fokus (Contoh: Pelaksanaan Kurikulum & Pentaksiran)" class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs sm:text-sm font-semibold focus:ring-2 focus:ring-srati-600 outline-none">
+                        <textarea rows="3" oninput="updateAgendaField('${item.id}', 'huraian', this.value)" placeholder="Catatkan isi penting, arahan KPM, tarikh akhir atau maklumat penting di sini..." class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs sm:text-sm focus:ring-2 focus:ring-srati-600 outline-none leading-relaxed">${escapeHtml(item.huraian)}</textarea>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        window.addAgendaItem = function(prefillText = '') {
+            currentMinit.agendaItems.push({
+                id: crypto.randomUUID(),
+                tajukPerkara: '',
+                huraian: prefillText
+            });
+            renderAgendaList();
+            updateCompletionMeter();
+            updateWhatsAppPreview();
+        };
+
+        window.removeAgendaItem = function(id) {
+            currentMinit.agendaItems = currentMinit.agendaItems.filter(item => item.id !== id);
+            renderAgendaList();
+            updateCompletionMeter();
+            updateWhatsAppPreview();
+        };
+
+        window.updateAgendaField = function(id, field, value) {
+            const item = currentMinit.agendaItems.find(i => i.id === id);
+            if (item) {
+                item[field] = value;
+                updateCompletionMeter();
+                updateWhatsAppPreview();
+            }
+        };
+
+        // ==================== SENARAI TINDAKAN SUSULAN ====================
+        function renderActionList() {
+            const container = document.getElementById('actionListContainer');
+            container.innerHTML = '';
+
+            currentMinit.actionItems.forEach((item, index) => {
+                const row = document.createElement('div');
+                row.className = 'p-4 rounded-xl bg-amber-50/40 border border-amber-200/80 space-y-3';
+                row.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-extrabold text-amber-900 bg-amber-100 px-2.5 py-0.5 rounded-lg">
+                            Tindakan #${index + 1}
+                        </span>
+                        ${currentMinit.actionItems.length > 1 ? `
+                            <button type="button" onclick="removeActionItem('${item.id}')" class="text-xs text-red-500 hover:text-red-700 font-semibold">
+                                <i class="fa-solid fa-xmark mr-1"></i>Buang
+                            </button>
+                        ` : ''}
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-12 gap-2.5">
+                        <div class="sm:col-span-12">
+                            <input type="text" value="${escapeHtml(item.perkara)}" oninput="updateActionField('${item.id}', 'perkara', this.value)" placeholder="Nyatakan tindakan yang perlu diambil di SRATI..." class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs sm:text-sm focus:ring-2 focus:ring-srati-600 outline-none">
+                        </div>
+                        <div class="sm:col-span-5">
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-0.5">Tindakan Siapa (Unit/Panitia)</label>
+                            <input type="text" value="${escapeHtml(item.pelaksana)}" oninput="updateActionField('${item.id}', 'pelaksana', this.value)" placeholder="Contoh: Ketua Panitia / SU Kurikulum" class="w-full rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs focus:ring-2 focus:ring-srati-600 outline-none">
+                        </div>
+                        <div class="sm:col-span-4">
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-0.5">Tarikh Akhir</label>
+                            <input type="date" value="${escapeHtml(item.tarikhAkhir)}" oninput="updateActionField('${item.id}', 'tarikhAkhir', this.value)" class="w-full rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs focus:ring-2 focus:ring-srati-600 outline-none">
+                        </div>
+                        <div class="sm:col-span-3">
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-0.5">Status</label>
+                            <select onchange="updateActionField('${item.id}', 'status', this.value)" class="w-full rounded-lg border border-slate-300 bg-white px-2 py-1.5 text-xs font-semibold outline-none">
+                                <option value="Dalam Proses" ${item.status === 'Dalam Proses' ? 'selected' : ''}>Dalam Proses</option>
+                                <option value="Belum Mula" ${item.status === 'Belum Mula' ? 'selected' : ''}>Belum Mula</option>
+                                <option value="Selesai" ${item.status === 'Selesai' ? 'selected' : ''}>Selesai</option>
+                                <option value="Makluman Sahaja" ${item.status === 'Makluman Sahaja' ? 'selected' : ''}>Makluman</option>
+                            </select>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        window.addActionItem = function() {
+            currentMinit.actionItems.push({
+                id: crypto.randomUUID(),
+                perkara: '',
+                pelaksana: '',
+                tarikhAkhir: '',
+                status: 'Dalam Proses'
+            });
+            renderActionList();
+            updateCompletionMeter();
+        };
+
+        window.removeActionItem = function(id) {
+            currentMinit.actionItems = currentMinit.actionItems.filter(item => item.id !== id);
+            renderActionList();
+            updateCompletionMeter();
+        };
+
+        window.updateActionField = function(id, field, value) {
+            const item = currentMinit.actionItems.find(i => i.id === id);
+            if (item) {
+                item[field] = value;
+                updateCompletionMeter();
+                updateWhatsAppPreview();
+            }
+        };
+
+        // ==================== BANK FRASA & METER KELENGKAPAN ====================
+        function renderPhraseBank() {
+            const container = document.getElementById('phraseBankContainer');
+            container.innerHTML = '';
+            KPM_PHRASE_BANK.forEach((phrase, idx) => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'text-left text-[11px] bg-slate-100 hover:bg-srati-100 text-slate-700 hover:text-srati-900 px-2.5 py-1.5 rounded-lg border border-slate-200 transition leading-snug';
+                btn.innerHTML = `<i class="fa-solid fa-plus text-srati-600 mr-1"></i>${phrase.substring(0, 62)}...`;
+                btn.title = phrase;
+                btn.onclick = () => {
+                    // Masukkan ke item agenda kosong pertama, atau cipta baharu
+                    const emptyItem = currentMinit.agendaItems.find(i => !i.huraian.trim());
+                    if (emptyItem) {
+                        emptyItem.huraian = phrase;
+                        renderAgendaList();
+                    } else {
+                        addAgendaItem(phrase);
+                    }
+                    updateCompletionMeter();
+                    updateWhatsAppPreview();
+                    showToast('Frasa rasmi KPM dimasukkan ke dalam Isi Penting.', 'success');
+                };
+                container.appendChild(btn);
+            });
+        }
+
+        function updateCompletionMeter() {
+            let score = 0;
+            const totalChecks = 7;
+
+            if (currentMinit.namaGuru.trim()) score++;
+            if (currentMinit.jawatan.trim()) score++;
+            if (currentMinit.tajuk.trim()) score++;
+            if (currentMinit.anjuran.trim()) score++;
+            if (currentMinit.tempat.trim()) score++;
+            if (currentMinit.agendaItems.some(i => i.huraian.trim().length > 5)) score++;
+            if (currentMinit.actionItems.some(i => i.perkara.trim().length > 3)) score++;
+
+            const percent = Math.round((score / totalChecks) * 100);
+            document.getElementById('completionPercent').textContent = `${percent}%`;
+            document.getElementById('completionBar').style.width = `${percent}%`;
+
+            const hint = document.getElementById('completionHint');
+            if (percent === 100) {
+                hint.textContent = 'Tahniah! Minit Curai anda lengkap mengikut piawaian KPM dan sedia dicetak.';
+                hint.className = 'text-xs text-emerald-700 font-medium';
+            } else {
+                hint.textContent = `Lengkapkan ${totalChecks - score} lagi bahagian utama untuk dokumen rasmi yang sempurna.`;
+                hint.className = 'text-xs text-slate-500';
+            }
+        }
+
+        // ==================== PENJANA RINGKASAN WHATSAPP ====================
+        function updateWhatsAppPreview() {
+            const box = document.getElementById('whatsappPreviewBox');
+            const tarikhFormatted = formatDateMY(currentMinit.tarikh);
+            
+            let isiRingkas = currentMinit.agendaItems
+                .filter(i => i.tajukPerkara.trim() || i.huraian.trim())
+                .map((i, idx) => `${idx + 1}. ${i.tajukPerkara ? `*${i.tajukPerkara}*: ` : ''}${i.huraian}`)
+                .join('\n');
+
+            if (!isiRingkas) isiRingkas = '• (Belum dicatatkan)';
+
+            let tindakanRingkas = currentMinit.actionItems
+                .filter(a => a.perkara.trim())
+                .map((a, idx) => `▪ ${a.perkara} (${a.pelaksana || 'Sekolah'}${a.tarikhAkhir ? ' - Sebelum ' + formatDateMY(a.tarikhAkhir) : ''})`)
+                .join('\n');
+
+            const text = `*ASSALAMUALAIKUM & SALAM SEJAHTERA*
+*LAPORAN RINGKAS MINIT CURAI (SRATI)*
+
+📌 *Program:* ${currentMinit.tajuk || '(Tajuk Belum Diisi)'}
+🏷️ *Kategori:* ${currentMinit.kategori}
+🏛️ *Anjuran:* ${currentMinit.anjuran || '-'}
+📅 *Tarikh:* ${tarikhFormatted}
+⏰ *Masa:* ${currentMinit.masa || '-'}
+📍 *Tempat:* ${currentMinit.tempat || '-'}
+👤 *Guru Hadir:* ${currentMinit.namaGuru || '-'}
+
+*ISI PENTING:*
+${isiRingkas}
+
+${tindakanRingkas ? `*TINDAKAN SUSULAN SRATI:*\n${tindakanRingkas}\n` : ''}
+_Dijana melalui Sistem e-Minit Curai SRATI (Piawaian KPM)_`;
+
+            box.textContent = text;
+        }
+
+        window.copyWhatsAppSummary = function() {
+            const text = document.getElementById('whatsappPreviewBox').textContent;
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                showToast('Ringkasan WhatsApp berjaya disalin ke papan keratan!', 'success');
+            } catch (err) {
+                showToast('Gagal menyalin teks secara automatik.', 'error');
+            }
+            document.body.removeChild(textarea);
+        };
+
+        // ==================== PRATONTON DOKUMEN RASMI A4 (PIAWAIAN KPM) ====================
+        const SRATI_LOGO_URL = 'https://i.postimg.cc/3JjNh7X3/LOGO-SRATI-SABK.png';
+
+        function renderOfficialA4() {
+            const container = document.getElementById('officialA4Document');
+            const m = currentMinit;
+
+            const agendaRowsHtml = m.agendaItems.length > 0
+                ? m.agendaItems.map((item, idx) => `
+                    <div style="margin-bottom: 10px;">
+                        <div style="font-weight: bold; margin-bottom: 2px;">
+                            ${idx + 1}. ${escapeHtml(item.tajukPerkara || 'Perkara ' + (idx + 1))}
+                        </div>
+                        <div style="padding-left: 16px; white-space: pre-line; text-align: justify;">
+                            ${escapeHtml(item.huraian || '-')}
+                        </div>
+                    </div>
+                `).join('')
+                : '<p>-</p>';
+
+            const actionRowsHtml = m.actionItems.some(a => a.perkara.trim())
+                ? m.actionItems.filter(a => a.perkara.trim()).map((act, idx) => `
+                    <tr>
+                        <td style="text-align: center; width: 35px;">${idx + 1}.</td>
+                        <td>${escapeHtml(act.perkara)}</td>
+                        <td style="width: 150px;">${escapeHtml(act.pelaksana || '-')}</td>
+                        <td style="width: 95px; text-align: center;">${act.tarikhAkhir ? formatDateMY(act.tarikhAkhir) : 'Segera'}</td>
+                        <td style="width: 95px; text-align: center;">${escapeHtml(act.status)}</td>
+                    </tr>
+                `).join('')
+                : `<tr><td colspan="5" style="text-align: center; color: #555;">Tiada tindakan susulan khusus direkodkan (Untuk makluman sahaja).</td></tr>`;
+
+            container.innerHTML = `
+                <!-- KEPALA SURAT RASMI SRATI -->
+                <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 3px double #000; padding-bottom: 10px; margin-bottom: 14px;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div id="a4HeaderLogoWrapper" style="width: 62px; height: 62px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;">
+                            <img src="${SRATI_LOGO_URL}" alt="Logo SRA Tarbiyyah Islamiyah (SABK)" width="62" height="62" style="width: 62px; height: 62px; object-fit: contain;" onerror="this.onerror=null; this.src='https://placehold.co/120x120/065f46/fbbf24?text=SRATI';">
+                        </div>
+                        <div>
+                            <div style="font-size: 12.5pt; font-weight: bold; letter-spacing: 0.3px; color: #000;">
+                                SEKOLAH RENDAH AGAMA TARBIYYAH ISLAMIYAH (SABK)
+                            </div>
+                            <div style="font-size: 9.5pt; font-weight: bold; color: #065f46; margin-top: 1px;">
+                                MINIT CURAI (PIAWAIAN KPM)
+                            </div>
+                            <div style="font-size: 8.5pt; color: #333;">
+                                Sistem Pengurusan Dokumentasi & Kurikulum • Kementerian Pendidikan Malaysia (KPM)
+                            </div>
+                        </div>
+                    </div>
+                    <div style="text-align: right; font-size: 8.5pt;">
+                        <div><strong>Ruj. Kami:</strong> ${escapeHtml(m.rujukan || 'SRATI/MC/' + new Date().getFullYear())}</div>
+                        <div><strong>Tarikh:</strong> ${formatDateMY(m.tarikhSedia)}</div>
+                    </div>
+                </div>
+
+                <!-- TAJUK DOKUMEN -->
+                <div style="text-align: center; margin-bottom: 14px;">
+                    <div style="font-size: 13pt; font-weight: bold; text-decoration: underline; letter-spacing: 1px;">
+                        MINIT CURAI
+                    </div>
+                    <div style="font-size: 9.5pt; font-weight: bold; margin-top: 2px; text-transform: uppercase;">
+                        (${escapeHtml(m.kategori)} / URUSAN RASMI LUAR)
+                    </div>
+                </div>
+
+                <!-- BAHAGIAN A: MAKLUMAT ASAS -->
+                <table class="kpm-table">
+                    <tr>
+                        <th style="width: 28%;">1. KEPADA</th>
+                        <td>${escapeHtml(m.kepada || '-')}</td>
+                    </tr>
+                    <tr>
+                        <th>2. DARIPADA</th>
+                        <td><strong>${escapeHtml(m.namaGuru || '-')}</strong> (${escapeHtml(m.jawatan || '-')})</td>
+                    </tr>
+                    <tr>
+                        <th>3. PERKARA / TAJUK</th>
+                        <td style="font-weight: bold;">${escapeHtml(m.tajuk || '-')}</td>
+                    </tr>
+                    <tr>
+                        <th>4. ANJURAN</th>
+                        <td>${escapeHtml(m.anjuran || '-')}</td>
+                    </tr>
+                    <tr>
+                        <th>5. TARIKH & MASA</th>
+                        <td>${formatDateMY(m.tarikh)} &nbsp;|&nbsp; ${escapeHtml(m.masa || '-')}</td>
+                    </tr>
+                    <tr>
+                        <th>6. TEMPAT / PLATFORM</th>
+                        <td>${escapeHtml(m.tempat || '-')}</td>
+                    </tr>
+                    <tr>
+                        <th>7. PENGERUSI / PENCERAMAH</th>
+                        <td>${escapeHtml(m.pengerusi || '-')}</td>
+                    </tr>
+                    <tr>
+                        <th>8. TURUT HADIR (JIKA ADA)</th>
+                        <td>${escapeHtml(m.turutHadir || 'Tiada')}</td>
+                    </tr>
+                </table>
+
+                <!-- BAHAGIAN B: ISI PENTING -->
+                <div style="margin-top: 14px; margin-bottom: 14px;">
+                    <div style="background: #f1f5f9; border: 1px solid #1e293b; border-bottom: none; padding: 6px 10px; font-weight: bold; font-size: 10.5pt;">
+                        9. ISI PENTING / CATATAN PERBINCANGAN & KEPUTUSAN
+                    </div>
+                    <div style="border: 1px solid #1e293b; padding: 10px 12px; font-size: 10pt; min-height: 110px;">
+                        ${agendaRowsHtml}
+                    </div>
+                </div>
+
+                <!-- BAHAGIAN C: TINDAKAN SUSULAN SEKOLAH -->
+                <div class="page-break-inside-avoid" style="margin-top: 14px; margin-bottom: 14px;">
+                    <div style="font-weight: bold; font-size: 10.5pt; margin-bottom: 5px;">
+                        10. TINDAKAN SUSULAN PERINGKAT SEKOLAH (SRATI)
+                    </div>
+                    <table class="kpm-table" style="font-size: 9.5pt;">
+                        <thead>
+                            <tr>
+                                <th style="width: 35px; text-align: center;">Bil.</th>
+                                <th>Perkara / Tindakan Diperlukan</th>
+                                <th style="width: 150px;">Tindakan (Unit/Guru)</th>
+                                <th style="width: 95px; text-align: center;">Tarikh Akhir</th>
+                                <th style="width: 95px; text-align: center;">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${actionRowsHtml}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- BAHAGIAN D: BAHAN EDARAN -->
+                <div class="page-break-inside-avoid" style="margin-bottom: 18px;">
+                    <table class="kpm-table" style="font-size: 9.5pt;">
+                        <tr>
+                            <th style="width: 28%;">11. BAHAN EDARAN / LAMPIRAN</th>
+                            <td style="white-space: pre-line;">${escapeHtml(m.bahanEdaran || 'Tiada bahan edaran khusus / Rujuk fail panitia.')}</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- BAHAGIAN E: PENGESAHAN & TANDATANGAN -->
+                <div class="page-break-inside-avoid" style="margin-top: 24px; border: 1px solid #1e293b; padding: 12px;">
+                    <div style="display: flex; justify-content: space-between; gap: 24px; font-size: 10pt;">
+                        <!-- Kiri: Disediakan Oleh -->
+                        <div style="width: 48%;">
+                            <div style="font-weight: bold; margin-bottom: 42px;">Disediakan oleh:</div>
+                            <div style="border-bottom: 1px dotted #000; width: 85%; margin-bottom: 4px;"></div>
+                            <div style="font-weight: bold;">(${escapeHtml(m.namaGuru || 'NAMA GURU')})</div>
+                            <div>${escapeHtml(m.jawatan || 'Jawatan')}</div>
+                            <div>SR Agama Tarbiyyah Islamiyah (SRATI)</div>
+                            <div style="margin-top: 4px;">Tarikh: ${formatDateMY(m.tarikhSedia)}</div>
+                        </div>
+
+                        <!-- Kanan: Disemak / Disahkan Oleh -->
+                        <div style="width: 48%;">
+                            <div style="font-weight: bold; margin-bottom: 6px;">Disemak dan disahkan oleh:</div>
+                            <div style="font-size: 9pt; font-style: italic; color: #333; min-height: 28px; margin-bottom: 10px;">
+                                Ulasan: ${escapeHtml(m.ulasanPentadbir || '...........................................................................')}
+                            </div>
+                            <div style="border-bottom: 1px dotted #000; width: 85%; margin-bottom: 4px;"></div>
+                            <div style="font-weight: bold;">(${escapeHtml(m.pengesah || 'GURU BESAR')})</div>
+                            <div>Cop Rasmi Jawatan</div>
+                            <div style="margin-top: 4px;">Tarikh: ..............................</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ==================== CETAKAN PDF & MUAT TURUN WORD (.DOC) ====================
+        window.triggerPrintPDF = function() {
+            renderOfficialA4();
+            setTimeout(() => {
+                window.print();
+            }, 150);
+        };
+
+        window.downloadCurrentWord = function() {
+            syncFormState();
+            renderOfficialA4();
+            const clonedDoc = document.getElementById('officialA4Document').cloneNode(true);
+            const logoWrapper = clonedDoc.querySelector('#a4HeaderLogoWrapper');
+
+            if (logoWrapper) {
+                logoWrapper.innerHTML = `<img src="${SRATI_LOGO_URL}" width="62" height="62" style="width: 62px; height: 62px; object-fit: contain;" alt="Logo SRA Tarbiyyah Islamiyah (SABK)">`;
+            }
+
+            const docContent = clonedDoc.innerHTML;
+            const fileName = sanitizeFileName(`Minit_Curai_SRATI_${currentMinit.tajuk || 'Dokumen'}_${currentMinit.tarikh || ''}`) + '.doc';
+
+            const wordHtml = `
+                <html xmlns:o='urn:schemas-microsoft-com:office:office' 
+                      xmlns:w='urn:schemas-microsoft-com:office:word' 
+                      xmlns='http://www.w3.org/TR/REC-html40'>
+                <head>
+                    <meta charset='utf-8'>
+                    <title>Minit Curai SRATI</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; font-size: 10.5pt; color: #000; }
+                        table { width: 100%; border-collapse: collapse; margin-bottom: 12px; }
+                        th, td { border: 1px solid #000; padding: 6px 8px; vertical-align: top; text-align: left; }
+                        th { background-color: #f1f5f9; font-weight: bold; }
+                    </style>
+                </head>
+                <body>
+                    ${docContent}
+                </body>
+                </html>
+            `;
+
+            const blob = new Blob(['\ufeff', wordHtml], { type: 'application/msword' });
+            triggerFileDownload(blob, fileName);
+            showToast('Fail Microsoft Word (.doc) beserta logo SRATI sedang dimuat turun!', 'success');
+        };
+
+        // ==================== SISTEM DATA JSON (DOWNLOAD & UPLOAD) ====================
+        window.downloadCurrentJSON = function() {
+            syncFormState();
+            const exportPayload = {
+                sistem: 'e-Minit Curai SRATI (Piawaian KPM)',
+                jenisSandaran: 'TUNGGAL',
+                tarikhEksport: new Date().toISOString(),
+                rekod: currentMinit
+            };
+
+            const jsonStr = JSON.stringify(exportPayload, null, 2);
+            const blob = new Blob([jsonStr], { type: 'application/json' });
+            const fileName = sanitizeFileName(`Minit_Curai_SRATI_${currentMinit.tajuk || 'Draf'}_${currentMinit.tarikh || ''}`) + '.json';
+            
+            triggerFileDownload(blob, fileName);
+            showToast('Fail JSON Minit Curai semasa berjaya dimuat turun.', 'success');
+        };
+
+        window.downloadAllRecordsJSON = function() {
+            if (allRecords.length === 0) {
+                showToast('Tiada rekod dalam arkib awan untuk dieksport.', 'warning');
+                return;
+            }
+
+            const exportPayload = {
+                sistem: 'e-Minit Curai SRATI (Piawaian KPM)',
+                jenisSandaran: 'ARKIB_PENUH',
+                tarikhEksport: new Date().toISOString(),
+                jumlahRekod: allRecords.length,
+                senaraiRekod: allRecords
+            };
+
+            const jsonStr = JSON.stringify(exportPayload, null, 2);
+            const blob = new Blob([jsonStr], { type: 'application/json' });
+            const today = new Date().toISOString().split('T')[0];
+            triggerFileDownload(blob, `Arkib_Minit_Curai_SRATI_${today}.json`);
+            showToast(`Berjaya mengeksport ${allRecords.length} rekod ke fail JSON.`, 'success');
+        };
+
+        window.handleJSONUpload = function(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const parsed = JSON.parse(e.target.result);
+                    
+                    // Kes 1: Fail JSON Tunggal
+                    if (parsed.rekod && typeof parsed.rekod === 'object') {
+                        loadRecordIntoEditor(parsed.rekod, true);
+                        showToast('Fail JSON Minit Curai berjaya dimuatkan ke dalam borang!', 'success');
+                        switchTab('editor');
+                    } 
+                    // Kes 2: Fail JSON Arkib Pukal
+                    else if (Array.isArray(parsed.senaraiRekod)) {
+                        openConfirmModal(
+                            'Import Arkib Rekod JSON',
+                            `Fail ini mengandungi ${parsed.senaraiRekod.length} rekod Minit Curai. Adakah anda mahu memuat naik semua rekod ini ke simpanan awan SRATI?`,
+                            async () => {
+                                await batchImportRecordsToCloud(parsed.senaraiRekod);
+                            }
+                        );
+                    }
+                    // Kes 3: Objek Minit terus
+                    else if (parsed.tajuk !== undefined && parsed.namaGuru !== undefined) {
+                        loadRecordIntoEditor(parsed, true);
+                        showToast('Data JSON berjaya dimuatkan ke dalam borang!', 'success');
+                        switchTab('editor');
+                    } else {
+                        showToast('Struktur fail JSON tidak sah atau bukan daripada sistem ini.', 'error');
+                    }
+                } catch (err) {
+                    console.error("Ralat bacaan JSON:", err);
+                    showToast('Fail JSON rosak atau tidak dapat dibaca.', 'error');
+                }
+                event.target.value = '';
+            };
+            reader.readAsText(file);
+        };
+
+        async function batchImportRecordsToCloud(recordsArray) {
+            if (!isCloudReady || !db || !currentUser) {
+                // Tambah ke memori sesi jika luar talian
+                recordsArray.forEach(rec => {
+                    const recId = rec.id || `MC_IMP_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`;
+                    allRecords.unshift({ ...rec, id: recId });
+                });
+                updateArchiveStats();
+                renderArchiveList();
+                switchTab('archive');
+                showToast(`${recordsArray.length} rekod dimuatkan ke senarai sesi.`, 'info');
+                return;
+            }
+
+            let count = 0;
+            for (const rec of recordsArray) {
+                try {
+                    const recId = rec.id || `MC_IMP_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`;
+                    const docRef = doc(db, 'artifacts', appId, 'public', 'data', COLLECTION_NAME, recId);
+                    await setDoc(docRef, {
+                        ...rec,
+                        id: recId,
+                        agendaItems: JSON.stringify(rec.agendaItems || []),
+                        actionItems: JSON.stringify(rec.actionItems || []),
+                        updatedAt: new Date().toISOString()
+                    });
+                    count++;
+                } catch (err) {
+                    console.error("Gagal import satu rekod:", err);
+                }
+            }
+            switchTab('archive');
+            showToast(`Berjaya mengimport ${count} rekod ke simpanan awan SRATI!`, 'success');
+        }
+
+        // ==================== PENGURUSAN ARKIB REKOD AWAN ====================
+        function updateArchiveStats() {
+            document.getElementById('archiveCountBadge').textContent = allRecords.length;
+            document.getElementById('statTotalRecords').textContent = allRecords.length;
+
+            let pendingCount = 0;
+            let myCount = 0;
+
+            allRecords.forEach(rec => {
+                if (currentUser && rec.authorUid === currentUser.uid) {
+                    myCount++;
+                }
+                if (Array.isArray(rec.actionItems)) {
+                    rec.actionItems.forEach(a => {
+                        if (a.perkara && a.perkara.trim() && (a.status === 'Dalam Proses' || a.status === 'Belum Mula')) {
+                            pendingCount++;
+                        }
+                    });
+                }
+            });
+
+            document.getElementById('statPendingActions').textContent = pendingCount;
+            document.getElementById('statMyRecords').textContent = myCount;
+        }
+
+        window.renderArchiveList = function() {
+            const container = document.getElementById('archiveRecordsContainer');
+            const searchQuery = (document.getElementById('archiveSearchInput').value || '').toLowerCase();
+            const catFilter = document.getElementById('archiveCategoryFilter').value;
+            const ownerFilter = document.getElementById('archiveOwnerFilter').value;
+
+            const filtered = allRecords.filter(rec => {
+                const matchSearch = 
+                    (rec.tajuk || '').toLowerCase().includes(searchQuery) ||
+                    (rec.namaGuru || '').toLowerCase().includes(searchQuery) ||
+                    (rec.anjuran || '').toLowerCase().includes(searchQuery) ||
+                    (rec.rujukan || '').toLowerCase().includes(searchQuery);
+
+                const matchCat = catFilter === 'ALL' || rec.kategori === catFilter;
+                const matchOwner = ownerFilter === 'ALL' || (currentUser && rec.authorUid === currentUser.uid);
+
+                return matchSearch && matchCat && matchOwner;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="bg-white rounded-2xl border border-slate-200 p-12 text-center">
+                        <div class="w-16 h-16 rounded-2xl bg-slate-100 text-slate-400 flex items-center justify-center text-2xl mx-auto mb-3">
+                            <i class="fa-solid fa-folder-open"></i>
+                        </div>
+                        <h4 class="text-base font-bold text-slate-800">Tiada Rekod Minit Curai Ditemui</h4>
+                        <p class="text-xs text-slate-500 max-w-md mx-auto mt-1">
+                            Belum ada rekod yang disimpan atau tiada rekod sepadan dengan carian anda. Cipta Minit Curai baharu dan klik <strong>Simpan ke Awan</strong>.
+                        </p>
+                        <button type="button" onclick="switchTab('editor')" class="mt-4 px-4 py-2 rounded-xl bg-srati-700 text-white text-xs font-bold hover:bg-srati-800 transition">
+                            Ke Borang Minit Curai
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = '';
+            filtered.forEach(rec => {
+                const isMine = currentUser && rec.authorUid === currentUser.uid;
+                const card = document.createElement('div');
+                card.className = 'bg-white rounded-2xl border border-slate-200 hover:border-srati-400 p-5 shadow-sm transition';
+                card.innerHTML = `
+                    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                        <div class="space-y-1.5 flex-1">
+                            <div class="flex flex-wrap items-center gap-2">
+                                <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-srati-100 text-srati-800">
+                                    ${escapeHtml(rec.kategori || 'Taklimat')}
+                                </span>
+                                <span class="text-xs font-semibold text-slate-500">
+                                    <i class="fa-regular fa-calendar mr-1"></i>${formatDateMY(rec.tarikh)}
+                                </span>
+                                ${rec.rujukan ? `<span class="text-xs font-mono text-slate-500 bg-slate-100 px-2 py-0.5 rounded">${escapeHtml(rec.rujukan)}</span>` : ''}
+                                ${isMine ? `<span class="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200">Rekod Anda</span>` : ''}
+                            </div>
+                            <h4 class="text-base font-bold text-slate-900 leading-snug">
+                                ${escapeHtml(rec.tajuk || '(Tiada Tajuk)')}
+                            </h4>
+                            <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-600">
+                                <span><i class="fa-solid fa-user-tie text-srati-600 mr-1.5"></i><strong>${escapeHtml(rec.namaGuru || '-')}</strong> (${escapeHtml(rec.jawatan || '-')})</span>
+                                <span><i class="fa-solid fa-building-columns text-amber-600 mr-1.5"></i>${escapeHtml(rec.anjuran || '-')}</span>
+                            </div>
+                        </div>
+
+                        <!-- Butang Tindakan Rekod -->
+                        <div class="flex flex-wrap items-center gap-2 pt-2 lg:pt-0 border-t lg:border-t-0 border-slate-100 shrink-0">
+                            <button type="button" onclick="viewAndPrintArchiveRecord('${rec.id}')" class="px-3 py-2 rounded-xl bg-srati-700 hover:bg-srati-800 text-white text-xs font-bold transition flex items-center gap-1.5" title="Papar & Cetak A4">
+                                <i class="fa-solid fa-print"></i>
+                                <span>Papar / PDF</span>
+                            </button>
+                            <button type="button" onclick="editArchiveRecord('${rec.id}')" class="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold transition flex items-center gap-1.5" title="Sunting Rekod">
+                                <i class="fa-solid fa-pen"></i>
+                                <span>Sunting</span>
+                            </button>
+                            <button type="button" onclick="duplicateArchiveRecord('${rec.id}')" class="px-3 py-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 text-xs font-bold transition flex items-center gap-1.5" title="Salin sebagai draf baharu">
+                                <i class="fa-regular fa-copy"></i>
+                                <span>Salin</span>
+                            </button>
+                            <button type="button" onclick="downloadSingleArchiveJSON('${rec.id}')" class="px-3 py-2 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-800 border border-blue-200 text-xs font-bold transition flex items-center gap-1.5" title="Muat Turun JSON">
+                                <i class="fa-solid fa-download"></i>
+                                <span>JSON</span>
+                            </button>
+                            <button type="button" onclick="confirmDeleteArchiveRecord('${rec.id}')" class="px-2.5 py-2 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 text-xs font-bold transition" title="Padam Rekod">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        };
+
+        function loadRecordIntoEditor(record, keepAsNewDraft = false) {
+            currentMinit = {
+                ...createEmptyMinit(),
+                ...JSON.parse(JSON.stringify(record)),
+                id: keepAsNewDraft ? null : record.id
+            };
+            populateFormFromState();
+        }
+
+        window.editArchiveRecord = function(id) {
+            const rec = allRecords.find(r => r.id === id);
+            if (!rec) return;
+            loadRecordIntoEditor(rec, false);
+            switchTab('editor');
+            showToast('Rekod dimuatkan ke dalam borang untuk suntingan.', 'info');
+        };
+
+        window.viewAndPrintArchiveRecord = function(id) {
+            const rec = allRecords.find(r => r.id === id);
+            if (!rec) return;
+            loadRecordIntoEditor(rec, false);
+            switchTab('preview');
+        };
+
+        window.duplicateArchiveRecord = function(id) {
+            const rec = allRecords.find(r => r.id === id);
+            if (!rec) return;
+            loadRecordIntoEditor(rec, true);
+            currentMinit.tajuk = `${rec.tajuk} (Salinan)`;
+            populateFormFromState();
+            switchTab('editor');
+            showToast('Rekod disalin sebagai draf baharu.', 'success');
+        };
+
+        window.downloadSingleArchiveJSON = function(id) {
+            const rec = allRecords.find(r => r.id === id);
+            if (!rec) return;
+            const exportPayload = {
+                sistem: 'e-Minit Curai SRATI (Piawaian KPM)',
+                jenisSandaran: 'TUNGGAL',
+                tarikhEksport: new Date().toISOString(),
+                rekod: rec
+            };
+            const blob = new Blob([JSON.stringify(exportPayload, null, 2)], { type: 'application/json' });
+            const fileName = sanitizeFileName(`Minit_Curai_SRATI_${rec.tajuk || 'Rekod'}_${rec.tarikh || ''}`) + '.json';
+            triggerFileDownload(blob, fileName);
+            showToast('Fail JSON rekod berjaya dimuat turun.', 'success');
+        };
+
+        window.confirmDeleteArchiveRecord = function(id) {
+            const rec = allRecords.find(r => r.id === id);
+            if (!rec) return;
+            openConfirmModal(
+                'Padam Rekod Minit Curai',
+                `Adakah anda pasti mahu memadam rekod "${rec.tajuk}" secara kekal dari simpanan awan? Tindakan ini tidak boleh dikembalikan.`,
+                async () => {
+                    if (isCloudReady && db && currentUser) {
+                        try {
+                            await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', COLLECTION_NAME, id));
+                            if (currentMinit.id === id) {
+                                currentMinit.id = null;
+                                updateEditorBanner();
+                            }
+                            showToast('Rekod telah dipadam daripada simpanan awan.', 'success');
+                        } catch (err) {
+                            console.error("Ralat padam rekod:", err);
+                            showToast('Gagal memadam rekod dari awan.', 'error');
+                        }
+                    } else {
+                        allRecords = allRecords.filter(r => r.id !== id);
+                        updateArchiveStats();
+                        renderArchiveList();
+                        showToast('Rekod dipadam dari senarai sesi.', 'info');
+                    }
+                }
+            );
+        };
+
+        // ==================== CONTOH DATA KPM & RESET BORANG ====================
+        window.resetToNewForm = function(askConfirmation = false) {
+            const doReset = () => {
+                currentMinit = createEmptyMinit();
+                populateFormFromState();
+                switchTab('editor');
+                showToast('Borang Minit Curai baharu sedia diisi.', 'info');
+            };
+
+            if (askConfirmation && (currentMinit.tajuk.trim() || currentMinit.namaGuru.trim())) {
+                openConfirmModal(
+                    'Buka Borang Baharu',
+                    'Pastikan perubahan semasa telah disimpan ke awan atau dimuat turun sebagai JSON sebelum membuka borang baharu. Teruskan?',
+                    doReset
+                );
+            } else {
+                doReset();
+            }
+        };
+
+        window.fillSampleData = function() {
+            const today = new Date().toISOString().split('T')[0];
+            currentMinit = {
+                id: null,
+                rujukan: 'SRATI.600-3/2/4 (08)',
+                kepada: 'Guru Besar, SR Agama Tarbiyyah Islamiyah (SRATI)',
+                namaGuru: 'Ustaz Muhammad Syafiq bin Abdul Rahman',
+                jawatan: 'Ketua Panitia Pendidikan Islam (DG41)',
+                tajuk: 'Taklimat Penyelarasan Pentaksiran Bilik Darjah (PBD) & Pelaporan Akhir Sesi Akademik Peringkat Daerah',
+                kategori: 'Taklimat',
+                anjuran: 'Pejabat Pendidikan Daerah (PPD) & Sektor Pembelajaran JPN',
+                tarikh: today,
+                masa: '8.30 pagi – 1.00 tengah hari',
+                tempat: 'Dewan Al-Ghazali, Pejabat Pendidikan Daerah',
+                pengerusi: 'Puan Hajah Noraini binti Kassim (Timbalan PPD Sektor Pembelajaran)',
+                turutHadir: 'Ustazah Nurul Huda binti Ismail (Setiausaha Peperiksaan & PBD SRATI)',
+                agendaItems: [
+                    {
+                        id: crypto.randomUUID(),
+                        tajukPerkara: 'Penjaminan Kualiti Pentaksiran Bilik Darjah (PBD)',
+                        huraian: 'Semua guru mata pelajaran perlu memastikan Tahap Penguasaan (TP) murid dinilai secara holistik berasaskan pemerhatian, lisan dan penulisan sepanjang sesi pembelajaran serta direkodkan secara berterusan.'
+                    },
+                    {
+                        id: crypto.randomUUID(),
+                        tajukPerkara: 'Tarikh Akhir Pengisian Skor & Pelaporan dalam Sistem KPM',
+                        huraian: 'Pengisian data PBD dan Ujian Akhir Sesi Akademik (UASA) hendaklah dilengkapkan dalam sistem sebelum 28 haribulan ini bagi membolehkan pengesahan Guru Besar dibuat.'
+                    },
+                    {
+                        id: crypto.randomUUID(),
+                        tajukPerkara: 'Intervensi Murid Belum Menguasai (TP1 & TP2)',
+                        huraian: 'Panitia diminta menyediakan pelan intervensi berfokus kepada murid yang berada pada tahap TP1 dan TP2 serta mengadakan sesi libat urus bersama ibu bapa.'
+                    }
+                ],
+                actionItems: [
+                    {
+                        id: crypto.randomUUID(),
+                        perkara: 'Mengadakan taklimat dalaman (In-House Training) penyelarasan PBD kepada semua guru SRATI.',
+                        pelaksana: 'Setiausaha PBD & Ketua Panitia',
+                        tarikhAkhir: today,
+                        status: 'Dalam Proses'
+                    },
+                    {
+                        id: crypto.randomUUID(),
+                        perkara: 'Menyemak dan mengesahkan senarai murid yang memerlukan program intervensi pemulihan.',
+                        pelaksana: 'Semua Guru Mata Pelajaran',
+                        tarikhAkhir: today,
+                        status: 'Belum Mula'
+                    }
+                ],
+                bahanEdaran: '1. Slaid Taklimat Penjaminan Kualiti PBD (Pautan Google Drive PPD)\n2. Garis Panduan Pelaksanaan UASA & PBD Terkini KPM',
+                tarikhSedia: today,
+                pengesah: 'Guru Besar, SR Agama Tarbiyyah Islamiyah (SRATI)',
+                ulasanPentadbir: '',
+                authorUid: currentUser ? currentUser.uid : '',
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+            };
+
+            populateFormFromState();
+            showToast('Contoh Minit Curai rasmi KPM berjaya dimuatkan!', 'success');
+        };
+
+        // ==================== NAVIGASI TAB & UTILITI UI ====================
+        window.switchTab = function(tabName) {
+            activeTab = tabName;
+            const tabs = ['editor', 'preview', 'archive', 'json'];
+
+            tabs.forEach(t => {
+                const viewEl = document.getElementById(`view-${t}`);
+                const btnEl = document.getElementById(`tab-${t}`);
+                if (t === tabName) {
+                    viewEl.classList.remove('hidden');
+                    btnEl.classList.add('border-gold-400', 'text-gold-400');
+                    btnEl.classList.remove('border-transparent', 'text-emerald-100');
+                } else {
+                    viewEl.classList.add('hidden');
+                    btnEl.classList.remove('border-gold-400', 'text-gold-400');
+                    btnEl.classList.add('border-transparent', 'text-emerald-100');
+                }
+            });
+
+            if (tabName === 'preview') {
+                syncFormState();
+                renderOfficialA4();
+            } else if (tabName === 'archive') {
+                renderArchiveList();
+            }
+        };
+
+        function openConfirmModal(title, message, onConfirmCallback) {
+            const backdrop = document.getElementById('customModalBackdrop');
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalMessage').textContent = message;
+            
+            const confirmBtn = document.getElementById('modalConfirmBtn');
+            const newBtn = confirmBtn.cloneNode(true);
+            confirmBtn.parentNode.replaceChild(newBtn, confirmBtn);
+            
+            newBtn.addEventListener('click', () => {
+                closeCustomModal();
+                if (onConfirmCallback) onConfirmCallback();
+            });
+
+            backdrop.classList.remove('hidden');
+            backdrop.classList.add('flex');
+        }
+
+        window.closeCustomModal = function() {
+            const backdrop = document.getElementById('customModalBackdrop');
+            backdrop.classList.add('hidden');
+            backdrop.classList.remove('flex');
+        };
+
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            
+            let colors = 'bg-slate-800 text-white border-slate-700';
+            let icon = 'fa-circle-info text-blue-400';
+
+            if (type === 'success') {
+                colors = 'bg-emerald-900 text-white border-emerald-700';
+                icon = 'fa-circle-check text-emerald-400';
+            } else if (type === 'warning') {
+                colors = 'bg-amber-900 text-white border-amber-700';
+                icon = 'fa-triangle-exclamation text-amber-400';
+            } else if (type === 'error') {
+                colors = 'bg-red-900 text-white border-red-700';
+                icon = 'fa-circle-xmark text-red-400';
+            }
+
+            toast.className = `pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg border text-xs font-medium fade-in ${colors}`;
+            toast.innerHTML = `
+                <i class="fa-solid ${icon} text-base shrink-0"></i>
+                <span class="flex-1 leading-snug">${escapeHtml(message)}</span>
+            `;
+
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 3800);
+        }
+
+        // Fungsi Bantuan (Helpers)
+        function triggerFileDownload(blob, filename) {
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function sanitizeFileName(name) {
+            return name.replace(/[^a-zA-Z0-9_\-]/g, '_').replace(/_+/g, '_').substring(0, 75);
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        function formatDateMY(isoDate) {
+            if (!isoDate) return '-';
+            const parts = isoDate.split('-');
+            if (parts.length !== 3) return isoDate;
+            const months = ['Januari', 'Februari', 'Mac', 'April', 'Mei', 'Jun', 'Julai', 'Ogos', 'September', 'Oktober', 'November', 'Disember'];
+            const mIdx = parseInt(parts[1], 10) - 1;
+            return `${parseInt(parts[2], 10)} ${months[mIdx] || parts[1]} ${parts[0]}`;
+        }
+
+        function formatDateTimeMY(isoString) {
+            if (!isoString) return '-';
+            try {
+                const d = new Date(isoString);
+                return d.toLocaleDateString('ms-MY', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+            } catch (e) {
+                return isoString;
+            }
+        }
+
+        // Permulaan Aplikasi
+        window.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('footerYear').textContent = new Date().getFullYear();
+            renderPhraseBank();
+            populateFormFromState();
+            initCloudSystem();
+        });
+    </script>
+</body>
+</html>
